@@ -20,6 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activites.NavActivity" />
+        <activity android:name=".activites.RegisterActivity" />
     </application>
 
 </manifest>
