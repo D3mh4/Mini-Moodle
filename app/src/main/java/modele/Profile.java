@@ -3,7 +3,7 @@ public class Profile {
 
     private String prenom;
     private String nom;
-    private String courriel;
+    private String courriel; // lecture seule si on prefere
     private String motDePasse;
     private String telephone;
     private String imageIcone; // optionnel
