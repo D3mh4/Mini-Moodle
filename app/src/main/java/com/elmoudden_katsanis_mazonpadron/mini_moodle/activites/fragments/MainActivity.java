@@ -11,7 +11,7 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnTestProfil;
+    private Button btnTestProfil, btnTestQuiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         btnTestProfil = findViewById(R.id.btnTestProfil);
+        btnTestQuiz = findViewById(R.id.btnTestQuiz);
         btnTestProfil.setOnClickListener(this);
+        btnTestQuiz.setOnClickListener(this);
     }
 
     @Override
@@ -28,6 +30,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ProfileFragment profileFragment = new ProfileFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, profileFragment);
+            transaction.commit();
+
+        } else if (v.getId() == R.id.btnTestQuiz) {
+            QuizFragment quizFragment = new QuizFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, quizFragment);
             transaction.commit();
         }
     }

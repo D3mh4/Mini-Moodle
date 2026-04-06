@@ -2,11 +2,19 @@ package modele;
 
 public class Quiz {
     private String titre;
-    private double duree; //optionnel
     private int nbrQuestions;
-    private int statut; //non commence ou termine
+    private String statut; //non commence ou termine
     private int score;
     private int resultat;
+
+    public Quiz() {
+    }
+
+    public Quiz(String titre, int nbrQuestions, String statut) {
+        this.titre = titre;
+        this.nbrQuestions = nbrQuestions;
+        this.statut = statut;
+    }
 
     public String getTitre() {
         return titre;
@@ -14,14 +22,6 @@ public class Quiz {
 
     public void setTitre(String titre) {
         this.titre = titre;
-    }
-
-    public double getDuree() {
-        return duree;
-    }
-
-    public void setDuree(double duree) {
-        this.duree = duree;
     }
 
     public int getNbrQuestions() {
@@ -32,11 +32,11 @@ public class Quiz {
         this.nbrQuestions = nbrQuestions;
     }
 
-    public int getStatut() {
+    public String getStatut() {
         return statut;
     }
 
-    public void setStatut(int statut) {
+    public void setStatut(String statut) {
         this.statut = statut;
     }
 

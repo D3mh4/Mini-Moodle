@@ -12,10 +12,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Aller au Profil"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Profil"
+        app:layout_constraintEnd_toStartOf="@+id/btnTestQuiz"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnTestQuiz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quiz"
+        app:layout_constraintBottom_toBottomOf="@+id/btnTestProfil"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnTestProfil"
+        app:layout_constraintTop_toTopOf="@+id/btnTestProfil" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
