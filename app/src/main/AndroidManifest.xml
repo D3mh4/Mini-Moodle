@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mini_moodle">
         <activity
-            android:name=".activites.fragments.MainActivity"
+            android:name=".vue.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.NavActivity" />
-        <activity android:name=".activites.RegisterActivity" />
+        <activity android:name=".vue.NavActivity" />
+        <activity android:name=".vue.RegisterActivity" />
     </application>
 
 </manifest>

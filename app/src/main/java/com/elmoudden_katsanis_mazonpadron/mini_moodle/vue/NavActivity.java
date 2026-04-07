@@ -1,4 +1,4 @@
-package com.elmoudden_katsanis_mazonpadron.mini_moodle.activites;
+package com.elmoudden_katsanis_mazonpadron.mini_moodle.vue;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.activites.fragments.*;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments.*;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.databinding.NavFragmentBinding;
 
 public class NavActivity extends AppCompatActivity {

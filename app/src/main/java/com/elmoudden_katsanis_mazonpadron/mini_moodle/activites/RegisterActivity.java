@@ -1,7 +1,0 @@
-package com.elmoudden_katsanis_mazonpadron.mini_moodle.activites;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-public class RegisterActivity extends AppCompatActivity {
-
-}

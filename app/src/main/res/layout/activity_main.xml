@@ -9,7 +9,7 @@
     android:paddingTop="80dp"
     android:paddingRight="60dp"
     android:paddingBottom="80dp"
-    tools:context=".activites.MainActivity">
+    tools:context=".vue.MainActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -37,7 +37,7 @@
             android:text="Courriel :" />
 
         <EditText
-            android:id="@+id/editTextTextEmailAddress"
+            android:id="@+id/editText_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -52,7 +52,7 @@
             android:text="Mot de passe :" />
 
         <EditText
-            android:id="@+id/editTextTextPassword"
+            android:id="@+id/editText_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -79,7 +79,7 @@
             app:backgroundTint="?attr/colorPrimary" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_template"

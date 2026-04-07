@@ -1,4 +1,4 @@
-package com.elmoudden_katsanis_mazonpadron.mini_moodle.activites.fragments;
+package com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
