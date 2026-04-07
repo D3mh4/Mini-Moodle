@@ -5,12 +5,15 @@ import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
-public class LoginFragment extends Fragment {
+public class RegisterFragment extends Fragment {
 
+    private EditText txtPrenom;
+    private EditText txtNom;
     private EditText txtCourriel;
-    private EditText motPasse;
-    private Button btnConnecter;
+    private EditText txtMotPasse;
     private Button btnInscrire;
+    private Button btnRetour;
+
 
 
 }
