@@ -18,11 +18,16 @@ public class ViewModelUser extends ViewModel {
     private final MutableLiveData<User> user = new MutableLiveData<>();
     private final MutableLiveData<String> message = new MutableLiveData<>();
     private final MutableLiveData<Boolean> saveSuccess = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> inscriptionSuccess = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loginSuccess = new MutableLiveData<>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public LiveData<User> getUser() {
         return user;
+    }
+
+    public void setUser(User u) {
+        user.setValue(u);
     }
 
     public LiveData<Boolean> getLoginSuccess() {
@@ -37,14 +42,19 @@ public class ViewModelUser extends ViewModel {
         return saveSuccess;
     }
 
-    public void authentifierUser(String email, String password){
+    public LiveData<Boolean> getInscriptionSuccess() {
+        return inscriptionSuccess;
+    }
+
+
+    public void authentifierUser(String email, String password) {
         executorService.execute(() -> {
             try {
                 List<User> users = UserDao.getUsers();
 
                 if (users != null) {
                     for (User u : users) {
-                        if (u.getEmail().equals(email) && u.getPassword().equals(password)) {
+                        if (email.equals(u.getEmail()) && password.equals(u.getPassword())) {
                             user.postValue(u);
                             loginSuccess.postValue(true);
                             return;
@@ -52,11 +62,10 @@ public class ViewModelUser extends ViewModel {
                     }
                 }
 
-                message.postValue("Identifiants incorrects");
                 loginSuccess.postValue(false);
 
             } catch (JSONException | IOException e) {
-                message.postValue("Erreur lors du chargement");
+                message.postValue("Erreur de connexion au serveur");
                 loginSuccess.postValue(false);
             }
         });
@@ -102,5 +111,38 @@ public class ViewModelUser extends ViewModel {
         });
     }
 
+    public void inscrireUser(User newUser) {
+        executorService.execute(() -> {
+            try {
+                List<User> existingUsers = UserDao.getUsers();
 
+                if (existingUsers != null) {
+                    for (User u : existingUsers) {
+                        if (u.getEmail().equalsIgnoreCase(newUser.getEmail())) {
+                            message.postValue("Cet email est déjà utilisé.");
+                            inscriptionSuccess.postValue(false);
+                            return;
+                        }
+                    }
+                }
+
+                boolean reussite = UserDao.inscrire(newUser);
+                if (reussite) {
+                    message.postValue("Inscription réussie !");
+                    inscriptionSuccess.postValue(true);
+                } else {
+                    message.postValue("Erreur lors de l'inscription.");
+                    inscriptionSuccess.postValue(false);
+                }
+
+            } catch (Exception e) {
+                message.postValue("Erreur réseau ou serveur.");
+                inscriptionSuccess.postValue(false);
+            }
+        });
+    }
+
+    public void resetLoginStatus() {
+        loginSuccess.setValue(null);
+    }
 }

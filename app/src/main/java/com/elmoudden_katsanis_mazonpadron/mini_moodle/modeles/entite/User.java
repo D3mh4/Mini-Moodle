@@ -1,7 +1,24 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@JsonPropertyOrder({
+        "id",
+        "username",
+        "email",
+        "password",
+        "nom",
+        "prenom",
+        "telephone",
+        "photoUrl",
+        "enrolledCourseIds",
+        "quizResults",
+        "completedAssignmentIds"
+})
 public class User {
     private String id;
     private String username;
@@ -15,7 +32,6 @@ public class User {
     private List<String> enrolledCourseIds;
     private List<QuizResult> quizResults;
     private List<String> completedAssignmentIds;
-
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

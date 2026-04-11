@@ -16,4 +16,8 @@ public class UserDao {
     public static boolean enregistrer(User user) throws IOException, JSONException{
         return new HttpJsonService().enregistrerUser(user);
     }
+
+    public static boolean inscrire(User user) throws IOException, JSONException {
+        return new HttpJsonService().inscrireUser(user);
+    }
 }

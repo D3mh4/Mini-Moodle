@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button login;
     Button register;
 
+    EditText email;
+    EditText password;
+
+
     ActivityResultLauncher<Intent> activityResultLauncher;
     private ViewModelUser viewModel;
 
@@ -34,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         login = findViewById(R.id.btn_login);
         register = findViewById(R.id.btn_signup);
+        email = findViewById(R.id.editText_email);
+        password = findViewById(R.id.editText_password);
+
 
         login.setOnClickListener(this);
         register.setOnClickListener(this);
@@ -41,20 +48,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewModel = new ViewModelProvider(this).get(ViewModelUser.class);
 
         viewModel.getLoginSuccess().observe(this, success -> {
-
             if (success != null) {
-
                 if (success) {
-                    viewModel.getUser().observe(this, user -> {
-                        if (user != null) {
-                            Intent intent = new Intent(MainActivity.this, NavActivity.class);
-                            intent.putExtra("USER_ID", user.getId());
-                            activityResultLauncher.launch(intent);
-                        }
-                    });
+                    User loggedUser = viewModel.getUser().getValue();
 
+                    if (loggedUser != null) {
+                        Intent intent = new Intent(MainActivity.this, NavActivity.class);
+                        intent.putExtra("USER_ID", loggedUser.getId());
+                        activityResultLauncher.launch(intent);
+
+                        viewModel.resetLoginStatus();
+                    }
                 } else {
-                    Toast.makeText(MainActivity.this, "Identifiants incorrects", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Identifiants incorrects", Toast.LENGTH_SHORT).show();
+                    viewModel.resetLoginStatus();
                 }
             }
         });
@@ -68,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if ("REGISTER".equals(data.getStringExtra("TYPE"))) {
                             Toast.makeText(MainActivity.this, "Inscription réussie !", Toast.LENGTH_SHORT).show();
                         } else if ("DISCONNECT".equals(data.getStringExtra("TYPE"))) {
+                            email.setText("");
+                            password.setText("");
                             Toast.makeText(MainActivity.this, "Déconnexion réussie !", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -80,20 +89,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v == login) {
 
-            String email = ((EditText) findViewById(R.id.editText_email)).getText().toString();
-            String password = ((EditText) findViewById(R.id.editText_password)).getText().toString();
+            String emailValue = email.getText().toString();
+            String passwordValue = password.getText().toString();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (emailValue.isEmpty() || passwordValue.isEmpty()) {
                 Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (!email.contains("@") || !email.contains(".")) {
+            if (!emailValue.contains("@") || !emailValue.contains(".")) {
                 Toast.makeText(this, "Veuillez entrer un courriel valide", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            viewModel.authentifierUser(email, password);
+            viewModel.authentifierUser(emailValue, passwordValue);
 
         } else if (v == register) {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);

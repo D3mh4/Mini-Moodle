@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,6 +65,16 @@ public class HttpJsonService {
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+        if (user.getEnrolledCourseIds() == null) {
+            user.setEnrolledCourseIds(new ArrayList<>());
+        }
+        if (user.getQuizResults() == null) {
+            user.setQuizResults(new ArrayList<>());
+        }
+        if (user.getCompletedAssignmentIds() == null) {
+            user.setCompletedAssignmentIds(new ArrayList<>());
+        }
+
         JSONObject obj = new JSONObject();
         obj.put("id", user.getId());
         obj.put("username", user.getUsername());
@@ -77,7 +88,7 @@ public class HttpJsonService {
         obj.put("quizResults", user.getQuizResults());
         obj.put("completedAssignmentIds", user.getCompletedAssignmentIds());
 
-        RequestBody corpsRequete = RequestBody.create(String.valueOf(obj), JSON);
+        RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
         String url = URL_POINT_ENTREE + "/user/" + user.getId();
 
         Request request = new Request.Builder()
@@ -87,5 +98,35 @@ public class HttpJsonService {
 
         Response response = okHttpClient.newCall(request).execute();
         return response.code() == 200;
+    }
+
+    public boolean inscrireUser(User user) throws IOException {
+
+        if (user.getEnrolledCourseIds() == null) {
+            user.setEnrolledCourseIds(new ArrayList<>());
+        }
+        if (user.getQuizResults() == null) {
+            user.setQuizResults(new ArrayList<>());
+        }
+        if (user.getCompletedAssignmentIds() == null) {
+            user.setCompletedAssignmentIds(new ArrayList<>());
+        }
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(user);
+
+        RequestBody corpsRequete = RequestBody.create(json, JSON);
+
+        Request request = new Request.Builder()
+                .url(URL_POINT_ENTREE + "/users/")
+                .post(corpsRequete)
+                .build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return response.isSuccessful();
+        }
     }
 }
