@@ -46,7 +46,6 @@ public class ViewModelUser extends ViewModel {
         return inscriptionSuccess;
     }
 
-
     public void authentifierUser(String email, String password) {
         executorService.execute(() -> {
             try {
@@ -54,7 +53,7 @@ public class ViewModelUser extends ViewModel {
 
                 if (users != null) {
                     for (User u : users) {
-                        if (email.equals(u.getEmail()) && password.equals(u.getPassword())) {
+                        if (email.equals(u.getCourriel()) && password.equals(u.getMotDePasse())) {
                             user.postValue(u);
                             loginSuccess.postValue(true);
                             return;
@@ -71,7 +70,7 @@ public class ViewModelUser extends ViewModel {
         });
     }
 
-    public void chargerUserParId(String id){
+    public void chargerUserParId(String id) {
         executorService.execute(() -> {
             try {
                 List<User> users = UserDao.getUsers();
@@ -118,7 +117,7 @@ public class ViewModelUser extends ViewModel {
 
                 if (existingUsers != null) {
                     for (User u : existingUsers) {
-                        if (u.getEmail().equalsIgnoreCase(newUser.getEmail())) {
+                        if (u.getCourriel().equalsIgnoreCase(newUser.getCourriel())) {
                             message.postValue("Cet email est déjà utilisé.");
                             inscriptionSuccess.postValue(false);
                             return;
