@@ -1,12 +1,18 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResultatQuiz {
-    private String idQuiz;
+
+    private String quizId;
     private int score;
     private int total;
 
-    public String getIdQuiz() { return idQuiz; }
-    public void setIdQuiz(String idQuiz) { this.idQuiz = idQuiz; }
+    public ResultatQuiz() {}
+
+    public String getQuizId() { return quizId; }
+    public void setQuizId(String quizId) { this.quizId = quizId; }
 
     public int getScore() { return score; }
     public void setScore(int score) { this.score = score; }

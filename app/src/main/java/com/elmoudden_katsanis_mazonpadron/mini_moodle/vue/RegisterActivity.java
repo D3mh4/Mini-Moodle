@@ -69,11 +69,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             newUser.setId(java.util.UUID.randomUUID().toString());
             newUser.setPrenom(prenomValue);
             newUser.setNom(nomValue);
-            newUser.setNomUtilisateur("");
-            newUser.setCourriel(courrielValue);
-            newUser.setMotDePasse(motDePasseValue);
+            newUser.setUsername("");
+            newUser.setEmail(courrielValue);
+            newUser.setPassword(motDePasseValue);
             newUser.setTelephone("");
-            newUser.setImageIcone("");
+            newUser.setPhotoUrl("");
 
             viewModel.inscrireUser(newUser);
         }

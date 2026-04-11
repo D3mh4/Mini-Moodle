@@ -53,7 +53,7 @@ public class ViewModelUser extends ViewModel {
 
                 if (users != null) {
                     for (User u : users) {
-                        if (email.equals(u.getCourriel()) && password.equals(u.getMotDePasse())) {
+                        if (email.equals(u.getEmail()) && password.equals(u.getPassword())) {
                             user.postValue(u);
                             loginSuccess.postValue(true);
                             return;
@@ -93,8 +93,19 @@ public class ViewModelUser extends ViewModel {
     public void editUser(User u) {
         executorService.execute(() -> {
             try {
-                boolean reussite = UserDao.enregistrer(u);
+                List<User> users = UserDao.getUsers();
+                if (users != null) {
+                    for (User existingUser : users) {
+                        if (existingUser.getEmail().equalsIgnoreCase(u.getEmail())
+                                && !existingUser.getId().equals(u.getId())) {
 
+                            message.postValue("Cet email est déjà utilisé par un autre compte.");
+                            saveSuccess.postValue(false);
+                            return;
+                        }
+                    }
+                }
+                boolean reussite = UserDao.enregistrer(u);
                 if (reussite) {
                     user.postValue(u);
                     message.postValue("Modification réussie");
@@ -105,7 +116,7 @@ public class ViewModelUser extends ViewModel {
                 }
 
             } catch (JSONException | IOException e) {
-                message.postValue("Erreur lors de la modification");
+                message.postValue("Erreur de connexion au serveur");
             }
         });
     }
@@ -117,7 +128,7 @@ public class ViewModelUser extends ViewModel {
 
                 if (existingUsers != null) {
                     for (User u : existingUsers) {
-                        if (u.getCourriel().equalsIgnoreCase(newUser.getCourriel())) {
+                        if (u.getEmail().equalsIgnoreCase(newUser.getEmail())) {
                             message.postValue("Cet email est déjà utilisé.");
                             inscriptionSuccess.postValue(false);
                             return;
@@ -143,5 +154,9 @@ public class ViewModelUser extends ViewModel {
 
     public void resetLoginStatus() {
         loginSuccess.setValue(null);
+    }
+    public void resetSaveStatus() {
+        saveSuccess.setValue(null);
+        message.setValue(null);
     }
 }

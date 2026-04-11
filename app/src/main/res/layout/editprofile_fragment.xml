@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Prénom :"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText_prenom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entrez votre prénom..."
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Nom :"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText_nom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entrez votre nom..."
+                android:inputType="text"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Nom d'utilisateur :"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entrez un nom d'utilisateur"
+                android:inputType="text"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Courriel :"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entrez un courriel..."
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Mot de passe :"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entrez un mot de passe..."
+                android:inputType="textPassword"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Téléphone :"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText_telephone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Entrez votre numéro de téléphone..."
+                android:inputType="phone"
+                android:minHeight="48dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Image de profil (URL) :"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editText_imageurl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:hint="Entrez l'url de votre image de profil..."
+                android:inputType="textUri"
+                android:minHeight="48dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button_template"
+        android:text="Enregistrer"
+        app:layout_constraintBottom_toTopOf="@+id/btn_cancel" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_template"
+        android:text="Annuler"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:backgroundTint="?attr/colorSecondary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,14 +19,12 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <activity android:name=".vue.QuizActivity" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".vue.NavActivity" />
         <activity android:name=".vue.RegisterActivity" />
+        <activity android:name=".vue.QuizActivity" />
     </application>
 
 </manifest>

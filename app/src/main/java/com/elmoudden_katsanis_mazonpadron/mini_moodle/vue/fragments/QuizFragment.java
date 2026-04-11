@@ -18,7 +18,7 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.adaptateurs.QuizAdapter;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.QuizAdapter;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.QuizActivity;
 

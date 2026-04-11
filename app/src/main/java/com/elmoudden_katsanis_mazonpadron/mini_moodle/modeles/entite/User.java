@@ -1,10 +1,13 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite;
 
+import android.net.Uri;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
 
 @JsonPropertyOrder({
         "id",
@@ -19,32 +22,36 @@ import java.util.UUID;
         "quizResults",
         "completedAssignmentIds"
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     private String id;
-    private String nomUtilisateur;
-    private String courriel;
-    private String motDePasse;
+    private String username;
+    private String email;
+    private String password;
     private String nom;
     private String prenom;
     private String telephone;
-    private String imageIcone;
+    private String photoUrl;
 
-    private List<String> coursInscrits;
-    private List<ResultatQuiz> resultatsQuiz;
-    private List<String> devoirsCompletes;
+    private List<String> enrolledCourseIds = new ArrayList<>();
+    private List<ResultatQuiz> quizResults = new ArrayList<>();
+    private List<String> completedAssignmentIds = new ArrayList<>();
 
+    public User() {}
+
+    // Getters et Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public String getNomUtilisateur() { return nomUtilisateur; }
-    public void setNomUtilisateur(String nomUtilisateur) { this.nomUtilisateur = nomUtilisateur; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getCourriel() { return courriel; }
-    public void setCourriel(String courriel) { this.courriel = courriel; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getMotDePasse() { return motDePasse; }
-    public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
@@ -55,16 +62,15 @@ public class User {
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
 
-    public String getImageIcone() { return imageIcone; }
-    public void setImageIcone(String imageIcone) { this.imageIcone = imageIcone; }
+    public String getPhotoUrl() { return photoUrl; }
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
 
-    public List<String> getCoursInscrits() { return coursInscrits; }
-    public void setCoursInscrits(List<String> coursInscrits) { this.coursInscrits = coursInscrits; }
+    public List<String> getEnrolledCourseIds() { return enrolledCourseIds; }
+    public void setEnrolledCourseIds(List<String> enrolledCourseIds) { this.enrolledCourseIds = enrolledCourseIds; }
 
-    public List<ResultatQuiz> getResultatsQuiz() { return resultatsQuiz; }
-    public void setResultatsQuiz(List<ResultatQuiz> resultatsQuiz) { this.resultatsQuiz = resultatsQuiz; }
+    public List<ResultatQuiz> getQuizResults() { return quizResults; }
+    public void setQuizResults(List<ResultatQuiz> quizResults) { this.quizResults = quizResults; }
 
-    public List<String> getDevoirsCompletes() { return devoirsCompletes; }
-    public void setDevoirsCompletes(List<String> devoirsCompletes) { this.devoirsCompletes = devoirsCompletes; }
-
+    public List<String> getCompletedAssignmentIds() { return completedAssignmentIds; }
+    public void setCompletedAssignmentIds(List<String> completedAssignmentIds) { this.completedAssignmentIds = completedAssignmentIds; }
 }
