@@ -15,10 +15,8 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.User;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    EditText prenom, nom, email, password;
+    EditText prenom, nom, courriel, motDePasse;
     Button retour, inscription;
-
-    // Ajoute le ViewModel
     private ViewModelUser viewModel;
 
     @Override
@@ -28,8 +26,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         prenom = findViewById(R.id.editText_prenom);
         nom = findViewById(R.id.editText_nom);
-        email = findViewById(R.id.editText_email);
-        password = findViewById(R.id.editText_password);
+        courriel = findViewById(R.id.editText_email);
+        motDePasse = findViewById(R.id.editText_password);
 
         retour = findViewById(R.id.btn_signup);
         retour.setOnClickListener(this);
@@ -45,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 intent.putExtra("TYPE", "REGISTER");
                 setResult(RESULT_OK, intent);
                 finish();
-            }else {
+            } else {
                 Toast.makeText(this, viewModel.getMessage().getValue(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -59,10 +57,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else if (v == inscription) {
             String prenomValue = prenom.getText().toString().trim();
             String nomValue = nom.getText().toString().trim();
-            String emailValue = email.getText().toString().trim();
-            String passwordValue = password.getText().toString().trim();
+            String courrielValue = courriel.getText().toString().trim();
+            String motDePasseValue = motDePasse.getText().toString().trim();
 
-            if (prenomValue.isEmpty() || nomValue.isEmpty() || emailValue.isEmpty() || passwordValue.isEmpty()) {
+            if (prenomValue.isEmpty() || nomValue.isEmpty() || courrielValue.isEmpty() || motDePasseValue.isEmpty()) {
                 Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -71,14 +69,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             newUser.setId(java.util.UUID.randomUUID().toString());
             newUser.setPrenom(prenomValue);
             newUser.setNom(nomValue);
-            newUser.setUsername("");
-            newUser.setEmail(emailValue);
-            newUser.setPassword(passwordValue);
+            newUser.setNomUtilisateur("");
+            newUser.setCourriel(courrielValue);
+            newUser.setMotDePasse(motDePasseValue);
             newUser.setTelephone("");
-            newUser.setPhotoUrl("");
-            newUser.setEnrolledCourseIds(new java.util.ArrayList<>());
-            newUser.setQuizResults(new java.util.ArrayList<>());
-            newUser.setCompletedAssignmentIds(new java.util.ArrayList<>());
+            newUser.setImageIcone("");
 
             viewModel.inscrireUser(newUser);
         }

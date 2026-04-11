@@ -1,4 +1,4 @@
-package adaptateurs;
+package com.elmoudden_katsanis_mazonpadron.mini_moodle.adaptateurs;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 
 import java.util.List;
 
-import modele.Quiz;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 
 public class QuizAdapter extends ArrayAdapter<Quiz> {
 

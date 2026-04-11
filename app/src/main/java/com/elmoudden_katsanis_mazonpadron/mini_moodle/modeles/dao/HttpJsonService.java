@@ -21,17 +21,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * Service pour les appels HTTP vers l'API JSON.
- */
 public class HttpJsonService {
 
     private static String URL_POINT_ENTREE = "http://10.0.2.2:3000";
 
-    /**
-     * Récupère la liste des comptes depuis l'API.
-     */
-    public List<User> getUsers()  throws IOException, JSONException {
+    public List<User> getUsers() throws IOException, JSONException {
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
@@ -58,35 +52,32 @@ public class HttpJsonService {
         return null;
     }
 
-    /**
-     * Envoie un compte mis à jour vers l'API.
-     */
     public boolean enregistrerUser(User user) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-        if (user.getEnrolledCourseIds() == null) {
-            user.setEnrolledCourseIds(new ArrayList<>());
+        if (user.getCoursInscrits() == null) {
+            user.setCoursInscrits(new ArrayList<>());
         }
-        if (user.getQuizResults() == null) {
-            user.setQuizResults(new ArrayList<>());
+        if (user.getResultatsQuiz() == null) {
+            user.setResultatsQuiz(new ArrayList<>());
         }
-        if (user.getCompletedAssignmentIds() == null) {
-            user.setCompletedAssignmentIds(new ArrayList<>());
+        if (user.getDevoirsCompletes() == null) {
+            user.setDevoirsCompletes(new ArrayList<>());
         }
 
         JSONObject obj = new JSONObject();
         obj.put("id", user.getId());
-        obj.put("username", user.getUsername());
-        obj.put("email", user.getEmail());
-        obj.put("password", user.getPassword());
+        obj.put("username", user.getNomUtilisateur());
+        obj.put("email", user.getCourriel());
+        obj.put("password", user.getMotDePasse());
         obj.put("nom", user.getNom());
         obj.put("prenom", user.getPrenom());
         obj.put("telephone", user.getTelephone());
-        obj.put("photoUrl", user.getPhotoUrl());
-        obj.put("enrolledCourseIds", user.getEnrolledCourseIds());
-        obj.put("quizResults", user.getQuizResults());
-        obj.put("completedAssignmentIds", user.getCompletedAssignmentIds());
+        obj.put("photoUrl", user.getImageIcone());
+        obj.put("enrolledCourseIds", user.getCoursInscrits());
+        obj.put("quizResults", user.getResultatsQuiz());
+        obj.put("completedAssignmentIds", user.getDevoirsCompletes());
 
         RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
         String url = URL_POINT_ENTREE + "/user/" + user.getId();
@@ -102,14 +93,14 @@ public class HttpJsonService {
 
     public boolean inscrireUser(User user) throws IOException {
 
-        if (user.getEnrolledCourseIds() == null) {
-            user.setEnrolledCourseIds(new ArrayList<>());
+        if (user.getCoursInscrits() == null) {
+            user.setCoursInscrits(new ArrayList<>());
         }
-        if (user.getQuizResults() == null) {
-            user.setQuizResults(new ArrayList<>());
+        if (user.getResultatsQuiz() == null) {
+            user.setResultatsQuiz(new ArrayList<>());
         }
-        if (user.getCompletedAssignmentIds() == null) {
-            user.setCompletedAssignmentIds(new ArrayList<>());
+        if (user.getDevoirsCompletes() == null) {
+            user.setDevoirsCompletes(new ArrayList<>());
         }
 
         OkHttpClient okHttpClient = new OkHttpClient();

@@ -9,17 +9,20 @@
         android:id="@+id/tvTitre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Titre"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvNbQuestions"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Nombre de questions" />
 
     <TextView
         android:id="@+id/tvStatut"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Statut" />
 
 </LinearLayout>
