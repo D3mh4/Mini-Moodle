@@ -22,8 +22,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Button btnModifierProfil;
     private ImageView imageProfil;
     private TextView txtNomPrenom, txtCourriel, txtTelephone;
-    private TextView txtModNom, txtModPrenom, txtModCourriel, txtModTelephone, txtModPasse;
-    private EditText editPrenom, editNom, editTelephone, editCourriel, editMotDePasse;
+    private TextView txtModNom, txtModPrenom, txtModCourriel, txtModTelephone, txtModPasse, txtModPhoto;
+    private EditText editPrenom, editNom, editTelephone, editCourriel, editMotDePasse, editPhotoUrl;
     private boolean modeEdition = false;
 
     public ProfileFragment() {
@@ -47,12 +47,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         txtModCourriel = view.findViewById(R.id.txtModCourriel);
         txtModTelephone = view.findViewById(R.id.txtModTelephone);
         txtModPasse = view.findViewById(R.id.txtModPasse);
+        txtModPhoto = view.findViewById(R.id.txtModPhoto);
 
         editPrenom = view.findViewById(R.id.editPrenom);
         editNom = view.findViewById(R.id.editNom);
         editTelephone = view.findViewById(R.id.editTelephone);
         editCourriel = view.findViewById(R.id.editCourriel);
         editMotDePasse = view.findViewById(R.id.editMotDePasse);
+        editPhotoUrl = view.findViewById(R.id.editPhotoUrl);
 
         imageProfil = view.findViewById(R.id.imageProfil);
         btnModifierProfil = view.findViewById(R.id.btnModifierProfil);
@@ -72,12 +74,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         txtModCourriel.setVisibility(View.VISIBLE);
         txtModTelephone.setVisibility(View.VISIBLE);
         txtModPasse.setVisibility(View.VISIBLE);
+        txtModPhoto.setVisibility(View.VISIBLE);
 
         editNom.setVisibility(View.VISIBLE);
         editPrenom.setVisibility(View.VISIBLE);
         editCourriel.setVisibility(View.VISIBLE);
         editTelephone.setVisibility(View.VISIBLE);
         editMotDePasse.setVisibility(View.VISIBLE);
+        editPhotoUrl.setVisibility(View.VISIBLE);
 
         btnModifierProfil.setText("Enregistrer");
     }
@@ -103,12 +107,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         txtModCourriel.setVisibility(View.GONE);
         txtModTelephone.setVisibility(View.GONE);
         txtModPasse.setVisibility(View.GONE);
+        txtModPhoto.setVisibility(View.GONE);
 
         editNom.setVisibility(View.GONE);
         editPrenom.setVisibility(View.GONE);
         editCourriel.setVisibility(View.GONE);
         editTelephone.setVisibility(View.GONE);
         editMotDePasse.setVisibility(View.GONE);
+        editPhotoUrl.setVisibility(View.GONE);
 
         btnModifierProfil.setText("Modifier mon profil");
     }

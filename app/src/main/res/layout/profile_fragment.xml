@@ -121,8 +121,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:ems="10"
+        android:enabled="false"
         android:hint="fake@gmail.com"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:visibility="gone"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtModCourriel"
         app:layout_constraintEnd_toEndOf="parent"
@@ -173,6 +174,30 @@
         android:inputType="textPassword"
         android:visibility="gone"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtModPasse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineContent" />
+
+    <TextView
+        android:id="@+id/txtModPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="URL Photo:"
+        android:textSize="24sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@+id/txtModPasse" />
+
+    <EditText
+        android:id="@+id/editPhotoUrl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="http://..."
+        android:inputType="textUri"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtModPhoto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guidelineContent" />
 
