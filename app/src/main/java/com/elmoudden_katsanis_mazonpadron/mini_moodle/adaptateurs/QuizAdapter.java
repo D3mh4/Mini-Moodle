@@ -1,4 +1,4 @@
-package adaptateurs;
+package com.elmoudden_katsanis_mazonpadron.mini_moodle.adaptateurs;
 
 import android.content.Context;
 import android.view.LayoutInflater;

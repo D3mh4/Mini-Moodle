@@ -15,7 +15,7 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import adaptateurs.QuizAdapter;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.adaptateurs.QuizAdapter;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 
 public class QuizFragment extends Fragment {
