@@ -1,6 +1,5 @@
-package com.elmoudden_katsanis_mazonpadron.mini_moodle.activites.fragments;
+package com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
-
-import org.w3c.dom.Text;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
     private Button btnModifierProfil;
