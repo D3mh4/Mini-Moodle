@@ -1,6 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Layout de l'écran Liste des Cours.
+    Contient une barre de recherche en haut et un RecyclerView
+    pour afficher tous les cours auxquels l'étudiant est inscrit.
+    
+    La barre de recherche permet de filtrer par nom ou code de cours
+    (fonctionnalité recommandée dans l'énoncé).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Titre de l'écran -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mes Cours"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="12dp" />
+
+    <!--
+        Barre de recherche.
+        EditText avec un hint et une icône de recherche.
+        Le background est un rectangle arrondi blanc pour correspondre au design.
+    -->
+    <EditText
+        android:id="@+id/etRechercheCours"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Rechercher un cours..."
+        android:inputType="text"
+        android:padding="12dp"
+        android:textSize="14sp"
+        android:background="@drawable/button_template"
+        android:backgroundTint="@color/white"
+        android:layout_marginBottom="12dp"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp" />
+
+    <!-- RecyclerView pour la liste complète des cours inscrits -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvListeCours"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!--
+        Message affiché quand aucun cours n'est trouvé.
+        Initialement invisible (GONE), rendu visible par le code Java
+        quand la liste est vide.
+    -->
+    <TextView
+        android:id="@+id/tvAucunCours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Aucun cours trouvé."
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:visibility="gone"
+        android:layout_marginTop="40dp" />
+
+</LinearLayout>

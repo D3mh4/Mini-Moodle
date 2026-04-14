@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!--
+    Layout du tableau de bord (Dashboard).
+    Utilise un ScrollView pour permettre le défilement vertical
+    quand le contenu dépasse la taille de l'écran.
+    
+    Structure :
+    - Section "les cours inscrits" avec un RecyclerView
+    - Section "les travaux à remettre bientôt" avec un RecyclerView
+    - Section "Quiz disponibles" avec un RecyclerView
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:fillViewport="true">
+
+    <!-- LinearLayout vertical pour empiler les sections -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- ===== SECTION : COURS INSCRITS ===== -->
+        <TextView
+            android:id="@+id/tvSectionCours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="les cours inscrits"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:layout_marginBottom="8dp" />
+
+        <!--
+            RecyclerView pour la liste des cours.
+            nestedScrollingEnabled="false" empêche le conflit de défilement
+            avec le ScrollView parent (sinon le RecyclerView capturerait
+            les événements de scroll et le défilement serait saccadé).
+        -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCoursInscrits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ===== SECTION : TRAVAUX À REMETTRE BIENTÔT ===== -->
+        <TextView
+            android:id="@+id/tvSectionTravaux"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="les travaux à remettre bientôt :"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTravauxProchains"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="16dp" />
+
+        <!-- ===== SECTION : QUIZ DISPONIBLES ===== -->
+        <TextView
+            android:id="@+id/tvSectionQuiz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quiz disponibles :"
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvQuizDisponibles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="16dp" />
+
+    </LinearLayout>
+</ScrollView>
