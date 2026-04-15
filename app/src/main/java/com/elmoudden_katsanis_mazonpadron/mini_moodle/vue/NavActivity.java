@@ -58,8 +58,11 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
         // Quand l'utilisateur est chargé, on charge ses cours inscrits
         // pour que les notifications soient disponibles à tout moment
         viewModel.getUser().observe(this, user -> {
-            if (user != null && user.getEnrolledCourseIds() != null) {
-                viewModelCours.chargerCoursInscrits(user.getEnrolledCourseIds());
+            if (user != null) {
+                viewModelAssignment.setCurrentUser(user);  // ← add this line
+                if (user.getEnrolledCourseIds() != null) {
+                    viewModelCours.chargerCoursInscrits(user.getEnrolledCourseIds());
+                }
             }
         });
 

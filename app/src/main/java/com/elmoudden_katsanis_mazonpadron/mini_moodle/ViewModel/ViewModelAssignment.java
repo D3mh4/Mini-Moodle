@@ -29,7 +29,6 @@ public class ViewModelAssignment extends ViewModel {
     private final MutableLiveData<Boolean> submissionSuccess = new MutableLiveData<>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    // Référence vers l'utilisateur courant pour accéder à ses completedAssignmentIds
     private User currentUser;
 
     public LiveData<List<Assignment>> getAssignmentList() {
@@ -56,22 +55,44 @@ public class ViewModelAssignment extends ViewModel {
         selectedAssignment.setValue(assignment);
     }
 
-    /**
-     * Stocke la référence vers l'utilisateur courant.
-     * Appelé depuis les fragments quand l'utilisateur est chargé.
-     */
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
 
     /**
-     * Applique le statut personnalisé par utilisateur :
-     * - Si l'ID du travail est dans completedAssignmentIds → "Remis"
-     * - Sinon, vérifie si la date est dépassée → "En retard"
-     * - Sinon, garde le statut par défaut du serveur
+     * Récupère la liste completedAssignmentIds la plus récente
+     * directement depuis le serveur pour éviter les données périmées.
+     * Appelé depuis les threads secondaires uniquement.
+     */
+    private List<String> getCompletedIdsFrais() {
+        if (currentUser == null) return null;
+
+        try {
+            List<User> users = UserDao.getUsers();
+            if (users != null) {
+                for (User u : users) {
+                    if (u.getId().equals(currentUser.getId())) {
+                        // Met à jour la référence locale aussi
+                        currentUser.setCompletedAssignmentIds(u.getCompletedAssignmentIds());
+                        return u.getCompletedAssignmentIds();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Fallback : utilise les données locales
+        return currentUser.getCompletedAssignmentIds();
+    }
+
+    /**
+     * Applique le statut personnalisé par utilisateur en récupérant
+     * les données fraîches depuis le serveur.
      */
     private void appliquerStatutUtilisateur(List<Assignment> assignments) {
-        List<String> completedIds = (currentUser != null) ? currentUser.getCompletedAssignmentIds() : null;
+        // Récupère les IDs complétés directement depuis le serveur
+        List<String> completedIds = getCompletedIdsFrais();
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -143,16 +164,10 @@ public class ViewModelAssignment extends ViewModel {
                 List<Assignment> upcoming = new ArrayList<>();
 
                 if (allAssignments != null && enrolledCourseIds != null) {
-                    // Applique les statuts utilisateur d'abord
-                    appliquerStatutUtilisateur(new ArrayList<>(allAssignments));
+                    // Applique les statuts per-user (récupère les données fraîches du serveur)
+                    appliquerStatutUtilisateur(allAssignments);
 
                     for (Assignment a : allAssignments) {
-                        // Applique le statut per-user avant de filtrer
-                        List<String> completedIds = (currentUser != null) ? currentUser.getCompletedAssignmentIds() : null;
-                        if (completedIds != null && completedIds.contains(a.getId())) {
-                            a.setStatus("Remis");
-                        }
-
                         if (enrolledCourseIds.contains(a.getCourseId())
                                 && a.getStatus() != null
                                 && a.getStatus().equalsIgnoreCase("à faire")) {
@@ -170,31 +185,31 @@ public class ViewModelAssignment extends ViewModel {
     }
 
     /**
-     * Soumet un travail en ajoutant son ID à la liste completedAssignmentIds
-     * de l'utilisateur courant, puis sauvegarde l'utilisateur sur le serveur.
-     *
-     * Le statut global du travail sur le serveur ne change PAS —
-     * chaque utilisateur a sa propre liste de travaux complétés.
+     * Soumet un travail en ajoutant son ID à completedAssignmentIds
+     * et PATCHe uniquement ce champ sur le serveur.
      */
     public void simulerSoumission(Assignment assignment) {
         if (assignment == null || assignment.getId() == null || currentUser == null) return;
 
         executorService.execute(() -> {
             try {
-                // Ajoute l'ID du travail à la liste des travaux complétés de l'utilisateur
-                List<String> completedIds = currentUser.getCompletedAssignmentIds();
+                // Récupère les IDs frais depuis le serveur d'abord
+                List<String> completedIds = getCompletedIdsFrais();
                 if (completedIds == null) {
                     completedIds = new ArrayList<>();
-                    currentUser.setCompletedAssignmentIds(completedIds);
                 }
 
-                // Vérifie qu'on ne l'ajoute pas en double
+                // Copie modifiable (au cas où la liste du serveur est immutable)
+                completedIds = new ArrayList<>(completedIds);
+                currentUser.setCompletedAssignmentIds(completedIds);
+
                 if (!completedIds.contains(assignment.getId())) {
                     completedIds.add(assignment.getId());
                 }
 
-                // Sauvegarde l'utilisateur mis à jour sur le serveur (PUT /users/{id})
-                boolean success = UserDao.enregistrer(currentUser);
+                // PATCH uniquement completedAssignmentIds sur le serveur
+                boolean success = UserDao.updateCompletedAssignments(
+                        currentUser.getId(), currentUser.getCompletedAssignmentIds());
 
                 if (success) {
                     assignment.setStatus("Remis");

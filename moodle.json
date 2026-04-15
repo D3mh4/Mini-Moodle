@@ -16,7 +16,7 @@
       ],
       "quizResults": [],
       "completedAssignmentIds": [
-        "3"
+        "2"
       ]
     },
     {
@@ -30,110 +30,11 @@
       "photoUrl": "",
       "enrolledCourseIds": [
         "1",
-        "3"
-      ],
-      "quizResults": [],
-      "completedAssignmentIds": []
-    },
-    {
-      "id": "nU1PVnxNynA",
-      "username": "",
-      "email": "pop@pop.pop",
-      "password": "pop123",
-      "nom": "pop",
-      "prenom": "pop",
-      "telephone": "",
-      "photoUrl": "",
-      "enrolledCourseIds": [
-        1,
-        2,
-        3
-      ],
-      "quizResults": [],
-      "completedAssignmentIds": []
-    },
-    {
-      "id": "94ktnBVVEt8",
-      "username": "",
-      "email": "pop@pop.com",
-      "password": "pop123",
-      "nom": "pop",
-      "prenom": "pop",
-      "telephone": "",
-      "photoUrl": "",
-      "enrolledCourseIds": [],
-      "quizResults": [],
-      "completedAssignmentIds": []
-    },
-    {
-      "id": "GpKqSh7Y9yg",
-      "username": "",
-      "email": "jeanprevost@ens.etsmtl.ca",
-      "password": "Jeanisthebest",
-      "nom": "prevost",
-      "prenom": "Jean",
-      "telephone": "",
-      "photoUrl": "",
-      "enrolledCourseIds": [
-        "1",
         "2",
         "3"
       ],
       "quizResults": [],
       "completedAssignmentIds": []
-    },
-    {
-      "id": "PmoS2UZOx3s",
-      "username": "",
-      "email": "tremblay@chateaugay.com",
-      "password": "tremblayloveschateaugay",
-      "nom": "tremblay",
-      "prenom": "Tremblay",
-      "telephone": "",
-      "photoUrl": "",
-      "enrolledCourseIds": [
-        "1",
-        "2",
-        "3"
-      ],
-      "quizResults": [],
-      "completedAssignmentIds": []
-    },
-    {
-      "id": "Oc5kL2aABPo",
-      "username": "",
-      "email": "lol@lol.lol",
-      "password": "lollol",
-      "nom": "lol",
-      "prenom": "lol",
-      "telephone": "",
-      "photoUrl": "",
-      "enrolledCourseIds": [
-        "1",
-        "2",
-        "3"
-      ],
-      "quizResults": [],
-      "completedAssignmentIds": []
-    },
-    {
-      "id": "ffDr4tMNKBA",
-      "username": "",
-      "email": "abc@def.xyz",
-      "password": "abcdefxyz",
-      "nom": "lololo",
-      "prenom": "lolloll",
-      "telephone": "",
-      "photoUrl": "",
-      "enrolledCourseIds": [
-        "1",
-        "2",
-        "3"
-      ],
-      "quizResults": [],
-      "completedAssignmentIds": [
-        "1"
-      ]
     }
   ],
   "courses": [
@@ -184,7 +85,7 @@
       "courseId": "1",
       "title": "Laboratoire noté #4",
       "description": "Création et manipulation d'une base de données relationnelle avec requêtes SQL avancées.",
-      "dueDate": "2026-04-30",
+      "dueDate": "2026-04-15",
       "instructions": "Réalisez les exercices du cahier de laboratoire. Soumettez votre fichier SQL et le rapport en PDF.",
       "status": "À faire",
       "grade": null,
@@ -197,7 +98,7 @@
       "courseId": "2",
       "title": "TP #3 - API REST",
       "description": "Développement d'une API REST avec Node.js et Express.",
-      "dueDate": "2026-04-29",
+      "dueDate": "2026-04-18",
       "instructions": "Implémentez les endpoints CRUD pour la gestion des produits. Testez avec Postman.",
       "status": "À faire",
       "grade": null,
@@ -236,7 +137,7 @@
       "courseId": "2",
       "title": "TP #2 - Frontend",
       "description": "Création d'une interface utilisateur responsive avec CSS Grid et Flexbox.",
-      "dueDate": "2026-03-20",
+      "dueDate": "2026-04-20",
       "instructions": "Intégrez la maquette fournie en HTML/CSS responsive.",
       "status": "À faire",
       "grade": null,

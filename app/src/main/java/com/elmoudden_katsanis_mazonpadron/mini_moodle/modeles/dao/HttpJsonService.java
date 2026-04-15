@@ -207,24 +207,17 @@ public class HttpJsonService {
 
     /**
      * Met à jour le statut d'un travail sur le serveur JSON.
-     * Utilise PATCH pour ne modifier que le champ "status"
-     * sans écraser les autres champs de l'objet.
-     *
-     * @param assignmentId L'ID du travail à modifier
-     * @param newStatus    Le nouveau statut (ex: "Remis")
-     * @return true si la mise à jour a réussi (code 200)
+     * Utilise PATCH pour ne modifier que le champ "status".
      */
     public boolean updateAssignmentStatus(String assignmentId, String newStatus) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-        // Construit le corps JSON avec seulement le champ à modifier
         JSONObject obj = new JSONObject();
         obj.put("status", newStatus);
 
         RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
 
-        // PATCH sur /assignments/{id} — ne modifie que les champs envoyés
         String url = URL_POINT_ENTREE + "/assignments/" + assignmentId;
 
         Request request = new Request.Builder()
@@ -237,6 +230,31 @@ public class HttpJsonService {
                 Log.e("HttpJsonService", "Erreur PATCH assignment: " + response.code() + " " + response.message());
             }
             return response.code() == 200;
+        }
+    }
+
+    /**
+     * Met à jour uniquement la liste des travaux complétés d'un utilisateur.
+     * Utilise PATCH pour ne pas écraser les autres champs de l'utilisateur.
+     */
+    public boolean updateCompletedAssignments(String userId, List<String> completedIds) throws IOException, JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject obj = new JSONObject();
+        obj.put("completedAssignmentIds", new org.json.JSONArray(completedIds));
+
+        RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
+
+        String url = URL_POINT_ENTREE + "/users/" + userId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .patch(corpsRequete)
+                .build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return response.isSuccessful();
         }
     }
 }
