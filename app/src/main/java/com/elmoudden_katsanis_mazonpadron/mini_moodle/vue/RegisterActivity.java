@@ -14,6 +14,8 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.User;
 
+import java.util.Arrays;
+
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     EditText prenom, nom, courriel, motDePasse;
     Button retour, inscription;
@@ -37,7 +39,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         viewModel = new ViewModelProvider(this).get(ViewModelUser.class);
 
         viewModel.getInscriptionSuccess().observe(this, success -> {
-            if (success != null && success) {
+            if (success == null) return;
+
+            if (success) {
                 Toast.makeText(this, viewModel.getMessage().getValue(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra("TYPE", "REGISTER");
@@ -74,6 +78,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             newUser.setPassword(motDePasseValue);
             newUser.setTelephone("");
             newUser.setPhotoUrl("");
+
+            // Auto-inscription à tous les cours disponibles
+            // Les IDs correspondent aux cours dans moodle.json
+            newUser.setEnrolledCourseIds(Arrays.asList("1", "2", "3"));
 
             viewModel.inscrireUser(newUser);
         }

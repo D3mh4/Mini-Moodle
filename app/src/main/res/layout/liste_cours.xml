@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Layout d'un item de cours dans la liste (RecyclerView).
-    Reproduit le design Figma : carte blanche avec ombre,
-    code du cours en petit, titre en gras, et flèche orange à droite.
-    
-    Utilise un CardView de Material Design pour l'effet de carte
-    avec coins arrondis et élévation (ombre).
--->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,61 +6,32 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    app:cardElevation="0dp"
     app:strokeWidth="0dp"
     app:cardBackgroundColor="@color/white">
 
-    <!--
-        LinearLayout horizontal : texte à gauche, flèche à droite.
-        gravity="center_vertical" aligne verticalement au centre.
-    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Partie texte (prend tout l'espace disponible avec weight=1) -->
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tvCodeCours"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:text="TCH055"
+            android:textSize="12sp"
+            android:textColor="@color/orange" />
 
-            <!-- Code du cours en petit texte orange (ex: TCH055) -->
-            <TextView
-                android:id="@+id/tvCodeCours"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TCH055"
-                android:textSize="12sp"
-                android:textColor="@color/orange" />
-
-            <!-- Titre du cours en gras (ex: Base de données) -->
-            <TextView
-                android:id="@+id/tvTitreCours"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Base de données"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
-
-        </LinearLayout>
-
-        <!--
-            Flèche orange à droite.
-            Utilise un caractère Unicode ">" stylisé.
-            On pourrait aussi utiliser un drawable vectoriel ici.
-        -->
-        <ImageView
-            android:id="@+id/ivArrowCours"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_media_play"
-            app:tint="@color/orange"
-            android:contentDescription="Voir détails" />
+        <TextView
+            android:id="@+id/tvTitreCours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Base de données"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 

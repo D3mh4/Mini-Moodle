@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Layout de l'écran Détails d'un Cours.
-    Affiche les informations complètes d'un cours sélectionné :
-    - En-tête avec code, titre et enseignant
-    - Description du cours
-    - Section Annonces
-    - Section Travaux (avec RecyclerView)
-    - Section Quiz
-
-    Utilise un ScrollView pour permettre le défilement
-    quand le contenu est plus long que l'écran.
--->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -24,11 +12,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ===== BOUTON RETOUR ===== -->
-        <!--
-            Permet de revenir à la liste des cours.
-            Utilise le FragmentManager pour dépiler (popBackStack).
-        -->
         <LinearLayout
             android:id="@+id/btnRetour"
             android:layout_width="wrap_content"
@@ -53,13 +36,13 @@
                 android:layout_marginStart="4dp" />
         </LinearLayout>
 
-        <!-- ===== EN-TÊTE DU COURS ===== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
@@ -68,7 +51,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Code du cours (ex: TCH057) -->
                 <TextView
                     android:id="@+id/tvDetailCodeCours"
                     android:layout_width="wrap_content"
@@ -77,7 +59,6 @@
                     android:textColor="@color/orange"
                     android:textSize="14sp" />
 
-                <!-- Titre du cours -->
                 <TextView
                     android:id="@+id/tvDetailTitreCours"
                     android:layout_width="wrap_content"
@@ -88,7 +69,6 @@
                     android:textColor="@color/black"
                     android:layout_marginTop="4dp" />
 
-                <!-- Nom de l'enseignant -->
                 <TextView
                     android:id="@+id/tvDetailEnseignant"
                     android:layout_width="wrap_content"
@@ -98,7 +78,6 @@
                     android:textColor="@color/gray"
                     android:layout_marginTop="4dp" />
 
-                <!-- Session (ex: H2026) -->
                 <TextView
                     android:id="@+id/tvDetailSession"
                     android:layout_width="wrap_content"
@@ -111,13 +90,13 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ===== DESCRIPTION DU COURS ===== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
@@ -146,13 +125,13 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ===== ANNONCES ===== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
@@ -170,18 +149,12 @@
                     android:textColor="@color/orange"
                     android:layout_marginBottom="6dp" />
 
-                <!--
-                    Container dynamique pour les annonces.
-                    Les annonces sont ajoutées par programmation
-                    car leur nombre varie selon le cours.
-                -->
                 <LinearLayout
                     android:id="@+id/llAnnonces"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-                <!-- Affiché quand il n'y a aucune annonce -->
                 <TextView
                     android:id="@+id/tvAucuneAnnonce"
                     android:layout_width="wrap_content"
@@ -194,7 +167,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ===== TRAVAUX DU COURS ===== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -211,7 +183,6 @@
             android:nestedScrollingEnabled="false"
             android:layout_marginBottom="16dp" />
 
-        <!-- Affiché quand il n'y a aucun travail pour ce cours -->
         <TextView
             android:id="@+id/tvAucunTravail"
             android:layout_width="match_parent"

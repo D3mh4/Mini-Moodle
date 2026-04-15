@@ -5,37 +5,32 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao.AssignmentDao;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao.UserDao;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Assignment;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.User;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ViewModelAssignment extends ViewModel {
 
-    // LiveData contenant tous les travaux
     private final MutableLiveData<List<Assignment>> assignmentList = new MutableLiveData<>();
-
-    // LiveData contenant les travaux filtrés par cours
     private final MutableLiveData<List<Assignment>> assignmentsByCourse = new MutableLiveData<>();
-
-    // LiveData pour un travail sélectionné (écran de détails)
     private final MutableLiveData<Assignment> selectedAssignment = new MutableLiveData<>();
-
-    // LiveData pour les messages d'erreur ou de succès
     private final MutableLiveData<String> message = new MutableLiveData<>();
-
-    // LiveData pour indiquer si la soumission a réussi
     private final MutableLiveData<Boolean> submissionSuccess = new MutableLiveData<>();
-
-    // ExecutorService pour les opérations en arrière-plan
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    // --- Getters ---
+    // Référence vers l'utilisateur courant pour accéder à ses completedAssignmentIds
+    private User currentUser;
 
     public LiveData<List<Assignment>> getAssignmentList() {
         return assignmentList;
@@ -57,21 +52,56 @@ public class ViewModelAssignment extends ViewModel {
         return submissionSuccess;
     }
 
-    // --- Setter ---
-
     public void setSelectedAssignment(Assignment assignment) {
         selectedAssignment.setValue(assignment);
     }
 
     /**
-     * Charge tous les travaux depuis le serveur JSON.
-     * Utilisé par l'écran Travaux pour afficher la liste complète.
+     * Stocke la référence vers l'utilisateur courant.
+     * Appelé depuis les fragments quand l'utilisateur est chargé.
      */
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    /**
+     * Applique le statut personnalisé par utilisateur :
+     * - Si l'ID du travail est dans completedAssignmentIds → "Remis"
+     * - Sinon, vérifie si la date est dépassée → "En retard"
+     * - Sinon, garde le statut par défaut du serveur
+     */
+    private void appliquerStatutUtilisateur(List<Assignment> assignments) {
+        List<String> completedIds = (currentUser != null) ? currentUser.getCompletedAssignmentIds() : null;
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date today = new Date();
+
+            for (Assignment a : assignments) {
+                // Si l'utilisateur a soumis ce travail → Remis
+                if (completedIds != null && completedIds.contains(a.getId())) {
+                    a.setStatus("Remis");
+                }
+                // Sinon, si la date est dépassée et toujours "À faire" → En retard
+                else if (a.getDueDate() != null && a.getStatus() != null
+                        && a.getStatus().equalsIgnoreCase("à faire")) {
+                    Date dueDate = sdf.parse(a.getDueDate());
+                    if (dueDate != null && dueDate.before(today)) {
+                        a.setStatus("En retard");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void chargerTousLesAssignments() {
         executorService.execute(() -> {
             try {
                 List<Assignment> assignments = AssignmentDao.getAssignments();
                 if (assignments != null) {
+                    appliquerStatutUtilisateur(assignments);
                     assignmentList.postValue(assignments);
                 } else {
                     assignmentList.postValue(new ArrayList<>());
@@ -83,12 +113,6 @@ public class ViewModelAssignment extends ViewModel {
         });
     }
 
-    /**
-     * Charge les travaux filtrés pour un cours spécifique.
-     * Utilisé dans l'écran de détails d'un cours.
-     *
-     * @param courseId L'ID du cours pour lequel filtrer les travaux
-     */
     public void chargerAssignmentsParCours(String courseId) {
         executorService.execute(() -> {
             try {
@@ -97,13 +121,13 @@ public class ViewModelAssignment extends ViewModel {
 
                 if (allAssignments != null) {
                     for (Assignment a : allAssignments) {
-                        // On compare le courseId du travail avec celui demandé
                         if (a.getCourseId() != null && a.getCourseId().equals(courseId)) {
                             filtered.add(a);
                         }
                     }
                 }
 
+                appliquerStatutUtilisateur(filtered);
                 assignmentsByCourse.postValue(filtered);
             } catch (IOException | JSONException e) {
                 message.postValue("Erreur lors du chargement des travaux du cours");
@@ -112,12 +136,6 @@ public class ViewModelAssignment extends ViewModel {
         });
     }
 
-    /**
-     * Charge les travaux dont la date limite approche (statut "à faire").
-     * Utilisé sur le tableau de bord pour la section "travaux à remettre bientôt".
-     *
-     * @param enrolledCourseIds Liste des IDs de cours auxquels l'utilisateur est inscrit
-     */
     public void chargerTravauxProchains(List<String> enrolledCourseIds) {
         executorService.execute(() -> {
             try {
@@ -125,9 +143,16 @@ public class ViewModelAssignment extends ViewModel {
                 List<Assignment> upcoming = new ArrayList<>();
 
                 if (allAssignments != null && enrolledCourseIds != null) {
+                    // Applique les statuts utilisateur d'abord
+                    appliquerStatutUtilisateur(new ArrayList<>(allAssignments));
+
                     for (Assignment a : allAssignments) {
-                        // On filtre : le travail doit appartenir à un cours inscrit
-                        // et avoir un statut "à faire" (non encore remis)
+                        // Applique le statut per-user avant de filtrer
+                        List<String> completedIds = (currentUser != null) ? currentUser.getCompletedAssignmentIds() : null;
+                        if (completedIds != null && completedIds.contains(a.getId())) {
+                            a.setStatus("Remis");
+                        }
+
                         if (enrolledCourseIds.contains(a.getCourseId())
                                 && a.getStatus() != null
                                 && a.getStatus().equalsIgnoreCase("à faire")) {
@@ -145,18 +170,46 @@ public class ViewModelAssignment extends ViewModel {
     }
 
     /**
-     * Simule la soumission d'un travail.
-     * Change le statut du travail à "Remis" localement.
-     * Dans une application complète, on enverrait aussi la mise à jour au serveur.
+     * Soumet un travail en ajoutant son ID à la liste completedAssignmentIds
+     * de l'utilisateur courant, puis sauvegarde l'utilisateur sur le serveur.
      *
-     * @param assignment Le travail à marquer comme remis
+     * Le statut global du travail sur le serveur ne change PAS —
+     * chaque utilisateur a sa propre liste de travaux complétés.
      */
     public void simulerSoumission(Assignment assignment) {
-        if (assignment != null) {
-            assignment.setStatus("Remis");
-            selectedAssignment.postValue(assignment);
-            message.postValue("Travail marqué comme remis !");
-            submissionSuccess.postValue(true);
-        }
+        if (assignment == null || assignment.getId() == null || currentUser == null) return;
+
+        executorService.execute(() -> {
+            try {
+                // Ajoute l'ID du travail à la liste des travaux complétés de l'utilisateur
+                List<String> completedIds = currentUser.getCompletedAssignmentIds();
+                if (completedIds == null) {
+                    completedIds = new ArrayList<>();
+                    currentUser.setCompletedAssignmentIds(completedIds);
+                }
+
+                // Vérifie qu'on ne l'ajoute pas en double
+                if (!completedIds.contains(assignment.getId())) {
+                    completedIds.add(assignment.getId());
+                }
+
+                // Sauvegarde l'utilisateur mis à jour sur le serveur (PUT /users/{id})
+                boolean success = UserDao.enregistrer(currentUser);
+
+                if (success) {
+                    assignment.setStatus("Remis");
+                    selectedAssignment.postValue(assignment);
+                    message.postValue("Travail marqué comme remis !");
+                    submissionSuccess.postValue(true);
+                } else {
+                    message.postValue("Erreur lors de la soumission.");
+                    submissionSuccess.postValue(false);
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                message.postValue("Erreur réseau : " + e.getMessage());
+                submissionSuccess.postValue(false);
+            }
+        });
     }
 }

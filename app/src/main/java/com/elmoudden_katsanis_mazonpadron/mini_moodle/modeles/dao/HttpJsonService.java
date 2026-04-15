@@ -204,4 +204,39 @@ public class HttpJsonService {
             return response.isSuccessful();
         }
     }
+
+    /**
+     * Met à jour le statut d'un travail sur le serveur JSON.
+     * Utilise PATCH pour ne modifier que le champ "status"
+     * sans écraser les autres champs de l'objet.
+     *
+     * @param assignmentId L'ID du travail à modifier
+     * @param newStatus    Le nouveau statut (ex: "Remis")
+     * @return true si la mise à jour a réussi (code 200)
+     */
+    public boolean updateAssignmentStatus(String assignmentId, String newStatus) throws IOException, JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        // Construit le corps JSON avec seulement le champ à modifier
+        JSONObject obj = new JSONObject();
+        obj.put("status", newStatus);
+
+        RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
+
+        // PATCH sur /assignments/{id} — ne modifie que les champs envoyés
+        String url = URL_POINT_ENTREE + "/assignments/" + assignmentId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .patch(corpsRequete)
+                .build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            if (response.code() != 200) {
+                Log.e("HttpJsonService", "Erreur PATCH assignment: " + response.code() + " " + response.message());
+            }
+            return response.code() == 200;
+        }
+    }
 }

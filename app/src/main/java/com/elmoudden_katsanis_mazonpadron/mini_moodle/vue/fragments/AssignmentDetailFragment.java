@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelAssignment;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Assignment;
 import com.google.android.material.card.MaterialCardView;
 
@@ -62,6 +63,11 @@ public class AssignmentDetailFragment extends Fragment {
 
         // Initialisation du ViewModel
         viewModelAssignment = new ViewModelProvider(requireActivity()).get(ViewModelAssignment.class);
+
+        ViewModelUser viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
+        if (viewModelUser.getUser().getValue() != null) {
+            viewModelAssignment.setCurrentUser(viewModelUser.getUser().getValue());
+        }
 
         // --- Récupération de toutes les vues ---
         tvTitre = view.findViewById(R.id.tvDetailTitreDevoir);

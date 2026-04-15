@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Layout d'un item de travail dans la liste RecyclerView.
-    Design similaire aux cartes de cours mais avec
-    un statut coloré et une date limite.
--->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,64 +6,42 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    app:cardElevation="0dp"
     app:strokeWidth="0dp"
     app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Contenu texte du travail -->
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tvTitreDevoir"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:text="Laboratoire noté #4"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
-            <!-- Titre du travail en gras -->
-            <TextView
-                android:id="@+id/tvTitreDevoir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Laboratoire noté #4"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/tvDateLimite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expire dans ..."
+            android:textSize="12sp"
+            android:textColor="@color/gray"
+            android:layout_marginTop="2dp" />
 
-            <!-- Date limite en texte gris -->
-            <TextView
-                android:id="@+id/tvDateLimite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Expire dans ..."
-                android:textSize="12sp"
-                android:textColor="@color/gray"
-                android:layout_marginTop="2dp" />
-
-            <!-- Statut avec couleur conditionnelle -->
-            <TextView
-                android:id="@+id/tvStatutDevoir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="À faire"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                android:layout_marginTop="2dp" />
-
-        </LinearLayout>
-
-        <!-- Flèche orange de navigation -->
-        <ImageView
-            android:id="@+id/ivArrowDevoir"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_media_play"
-            app:tint="@color/orange"
-            android:contentDescription="Voir détails" />
+        <TextView
+            android:id="@+id/tvStatutDevoir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="À faire"
+            android:textSize="12sp"
+            android:textColor="@color/gray"
+            android:layout_marginTop="2dp" />
 
     </LinearLayout>
 
