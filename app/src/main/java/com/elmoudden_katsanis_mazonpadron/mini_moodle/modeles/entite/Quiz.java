@@ -1,8 +1,9 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Quiz {
+public class Quiz implements Serializable {
 
     private String id;
     private String idCours;

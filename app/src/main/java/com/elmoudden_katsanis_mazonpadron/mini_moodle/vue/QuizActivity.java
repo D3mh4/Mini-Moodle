@@ -15,6 +15,9 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Question;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
+
 public class QuizActivity extends AppCompatActivity {
 
     private TextView tvTitreQuiz, tvQuestion;
@@ -23,13 +26,12 @@ public class QuizActivity extends AppCompatActivity {
 
     private Button btnValider;
 
-    private List<String> questions;
-    private List<String[]> choix;
-    private List<String> bonnesReponses;
+    private Quiz quiz;
+    private List<Question> questions;
 
     private int indexQuestion = 0;
     private int score = 0;
-    private String titre, reponse;
+    private String reponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +43,17 @@ public class QuizActivity extends AppCompatActivity {
         radioGroup = findViewById(R.id.radioGroupChoix);
         btnValider = findViewById(R.id.btnValider);
 
-        titre = getIntent().getStringExtra("titre");
-        tvTitreQuiz.setText(titre);
+        quiz = (Quiz) getIntent().getSerializableExtra("quiz");
+        if (quiz != null) {
+            tvTitreQuiz.setText(quiz.getTitre());
+            questions = quiz.getQuestions();
+        }
 
-        questions = new ArrayList<>();
-        choix = new ArrayList<>();
-        bonnesReponses = new ArrayList<>();
-
-        questions.add("Quel protocole est fiable mais plus lent ?");
-        choix.add(new String[]{"UDP", "TCP", "IP"});
-        bonnesReponses.add("TCP");
-
-        questions.add("Quel protocole est rapide mais moins fiable ?");
-        choix.add(new String[]{"TCP", "UDP", "HTTP"});
-        bonnesReponses.add("UDP");
+        if (questions == null || questions.isEmpty()) {
+            Toast.makeText(this, "Pas de questions dans ce quiz", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         afficherQuestion();
 
@@ -70,7 +69,7 @@ public class QuizActivity extends AppCompatActivity {
             selected = findViewById(selectedId);
             reponse = selected.getText().toString();
 
-            if (reponse.equals(bonnesReponses.get(indexQuestion))) {
+            if (reponse.equals(questions.get(indexQuestion).getCorrectAnswer())) {
                 score++;
             }
 
@@ -87,11 +86,13 @@ public class QuizActivity extends AppCompatActivity {
     private void afficherQuestion() {
         radioGroup.clearCheck();
 
-        tvQuestion.setText(questions.get(indexQuestion));
+        Question q = questions.get(indexQuestion);
+        tvQuestion.setText(q.getStatement());
 
-        ((RadioButton) findViewById(R.id.rb1)).setText(choix.get(indexQuestion)[0]);
-        ((RadioButton) findViewById(R.id.rb2)).setText(choix.get(indexQuestion)[1]);
-        ((RadioButton) findViewById(R.id.rb3)).setText(choix.get(indexQuestion)[2]);
+        String[] options = q.getChoices();
+        ((RadioButton) findViewById(R.id.rb1)).setText(options[0]);
+        ((RadioButton) findViewById(R.id.rb2)).setText(options[1]);
+        ((RadioButton) findViewById(R.id.rb3)).setText(options[2]);
     }
 
     private void afficherResultat() {
