@@ -24,19 +24,6 @@ import java.util.List;
 
 /**
  * Fragment affichant les détails d'un cours sélectionné.
- *
- * Sections affichées :
- * - En-tête : code du cours, titre, enseignant, session
- * - Description du cours
- * - Annonces (ajoutées dynamiquement par programmation)
- * - Liste des travaux liés à ce cours (RecyclerView)
- *
- * Le cours sélectionné est récupéré depuis le ViewModelCours
- * qui est partagé avec le fragment précédent (CoursesFragment ou Dashboard).
- *
- * Navigation :
- * - Bouton retour -> popBackStack() pour revenir au fragment précédent
- * - Clic sur un travail -> AssignmentDetailFragment
  */
 public class CourseDetailFragment extends Fragment {
 
@@ -50,7 +37,7 @@ public class CourseDetailFragment extends Fragment {
     // Vue de la description
     private TextView tvDescription;
 
-    // Container pour les annonces (ajoutées dynamiquement)
+    // Container pour les annonces
     private LinearLayout llAnnonces;
     private TextView tvAucuneAnnonce;
 
@@ -83,8 +70,6 @@ public class CourseDetailFragment extends Fragment {
         tvAucunTravail = view.findViewById(R.id.tvAucunTravail);
 
         // --- Bouton retour ---
-        // popBackStack() dépile le fragment courant de la pile de navigation
-        // et revient au fragment précédent (ajouté avec addToBackStack)
         view.findViewById(R.id.btnRetour).setOnClickListener(v -> {
             getParentFragmentManager().popBackStack();
         });
@@ -92,7 +77,6 @@ public class CourseDetailFragment extends Fragment {
         // --- Configuration du RecyclerView des travaux ---
         rvTravaux.setLayoutManager(new LinearLayoutManager(getContext()));
         assignmentAdapter = new AssignmentAdapter(assignment -> {
-            // Au clic sur un travail, on navigue vers ses détails
             viewModelAssignment.setSelectedAssignment(assignment);
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new AssignmentDetailFragment())
@@ -102,11 +86,9 @@ public class CourseDetailFragment extends Fragment {
         rvTravaux.setAdapter(assignmentAdapter);
 
         // --- Observation du cours sélectionné ---
-        // Quand le ViewModel fournit le cours, on remplit l'interface
         viewModelCours.getSelectedCours().observe(getViewLifecycleOwner(), cours -> {
             if (cours != null) {
                 afficherDetailsCours(cours);
-                // Charge les travaux liés à ce cours
                 viewModelAssignment.chargerAssignmentsParCours(cours.getId());
             }
         });
@@ -115,7 +97,6 @@ public class CourseDetailFragment extends Fragment {
         viewModelAssignment.getAssignmentsByCourse().observe(getViewLifecycleOwner(), assignments -> {
             if (assignments != null) {
                 assignmentAdapter.setAssignmentList(assignments);
-                // Affiche un message si aucun travail n'est associé
                 tvAucunTravail.setVisibility(assignments.isEmpty() ? View.VISIBLE : View.GONE);
             }
         });
@@ -127,35 +108,37 @@ public class CourseDetailFragment extends Fragment {
      * @param cours L'objet Cours contenant les données à afficher
      */
     private void afficherDetailsCours(Cours cours) {
-        // Affichage des informations de base
         tvCodeCours.setText(cours.getCodeCours());
         tvTitreCours.setText(cours.getTitre());
         tvEnseignant.setText("Enseignant : " + (cours.getEnseignant() != null ? cours.getEnseignant() : "---"));
-        tvSession.setText("Session : " + (cours.getSession() != null ? cours.getSession() : "---"));
 
-        // Description
+        // Formatage de la session (ex: "Hiver 2024" -> "H24")
+        String rawSession = cours.getSession();
+        if (rawSession != null && !rawSession.isEmpty()) {
+            String formatted = rawSession.substring(0, 1).toUpperCase();
+            if (rawSession.length() >= 2) {
+                formatted += rawSession.substring(rawSession.length() - 2);
+            }
+            tvSession.setText("Session : " + formatted);
+        } else {
+            tvSession.setText("Session : ---");
+        }
+
         tvDescription.setText(cours.getDescription() != null ? cours.getDescription() : "Aucune description disponible.");
 
         // --- Annonces ---
-        // Les annonces sont une liste de Strings dans l'objet Cours.
-        // On les ajoute dynamiquement au LinearLayout car leur nombre varie.
-        llAnnonces.removeAllViews(); // Nettoie les vues précédentes
-
+        llAnnonces.removeAllViews();
         List<String> annonces = cours.getAnnonces();
         if (annonces != null && !annonces.isEmpty()) {
             tvAucuneAnnonce.setVisibility(View.GONE);
-
             for (String annonce : annonces) {
-                // Crée un TextView par programmation pour chaque annonce
                 TextView tvAnnonce = new TextView(getContext());
                 tvAnnonce.setText("• " + annonce);
                 tvAnnonce.setTextSize(14);
                 tvAnnonce.setPadding(0, 4, 0, 4);
-                // Ajoute le TextView au container LinearLayout
                 llAnnonces.addView(tvAnnonce);
             }
         } else {
-            // Aucune annonce : affiche le message
             tvAucuneAnnonce.setVisibility(View.VISIBLE);
         }
     }

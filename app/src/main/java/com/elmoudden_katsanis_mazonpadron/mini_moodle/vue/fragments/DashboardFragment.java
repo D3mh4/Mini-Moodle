@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,22 +39,16 @@ import java.util.concurrent.Executors;
  * C'est l'écran principal après la connexion. Il affiche un résumé des
  * informations importantes de l'étudiant :
  * - Les cours auxquels il est inscrit
+ * - Résumé des travaux par statut (À faire, Remis, En retard, Corrigé)
  * - Les travaux à remettre bientôt (statut "à faire")
  * - Les quiz disponibles (statut "non commencé")
  *
  * Ce fragment utilise 3 ViewModels (ViewModelUser, ViewModelCours, ViewModelAssignment)
  * pour récupérer les données de manière réactive via LiveData.
- *
- * Architecture MVVM :
- * - Vue (ce Fragment) : observe les LiveData et met à jour l'UI
- * - ViewModel : contient la logique métier et expose les données via LiveData
- * - Modèle (DAO/Entité) : gère l'accès aux données (serveur JSON)
  */
 public class DashboardFragment extends Fragment {
 
     // ViewModels partagés avec l'Activity parente (NavActivity)
-    // Utiliser requireActivity() garantit que tous les fragments
-    // partagent la même instance de ViewModel
     private ViewModelUser viewModelUser;
     private ViewModelCours viewModelCours;
     private ViewModelAssignment viewModelAssignment;
@@ -63,9 +58,11 @@ public class DashboardFragment extends Fragment {
     private AssignmentAdapter assignmentAdapter;
     private DashboardQuizAdapter quizAdapter;
 
+    // Compteurs de statut pour le résumé des travaux
+    private TextView tvCountAFaire, tvCountRemis, tvCountRetard, tvCountCorrige;
+
     public DashboardFragment() {
         // Constructeur vide requis par le framework Android
-        // Les fragments doivent avoir un constructeur sans argument
     }
 
     @Override
@@ -79,26 +76,22 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // --- Initialisation des ViewModels ---
-        // ViewModelProvider avec requireActivity() partage le ViewModel avec NavActivity
-        // Cela permet au DashboardFragment d'accéder aux données de l'utilisateur
-        // chargées dans NavActivity lors de la connexion
         viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
         viewModelCours = new ViewModelProvider(requireActivity()).get(ViewModelCours.class);
         viewModelAssignment = new ViewModelProvider(requireActivity()).get(ViewModelAssignment.class);
 
+        // --- Récupération des vues du résumé ---
+        tvCountAFaire = view.findViewById(R.id.tvCountAFaire);
+        tvCountRemis = view.findViewById(R.id.tvCountRemis);
+        tvCountRetard = view.findViewById(R.id.tvCountRetard);
+        tvCountCorrige = view.findViewById(R.id.tvCountCorrige);
+
         // --- Configuration du RecyclerView des cours ---
-        // LinearLayoutManager dispose les items en liste verticale
         RecyclerView rvCours = view.findViewById(R.id.rvCoursInscrits);
         rvCours.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // L'adaptateur reçoit un callback (lambda) qui sera appelé au clic sur un cours
-        // -> Navigue vers l'écran de détails du cours
         coursAdapter = new CoursAdapter(cours -> {
-            // Stocke le cours sélectionné dans le ViewModel pour le partager
             viewModelCours.setSelectedCours(cours);
-
-            // Remplace le fragment actuel par CourseDetailFragment
-            // addToBackStack(null) permet de revenir en arrière avec le bouton retour
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new CourseDetailFragment())
                     .addToBackStack(null)
@@ -110,7 +103,6 @@ public class DashboardFragment extends Fragment {
         RecyclerView rvTravaux = view.findViewById(R.id.rvTravauxProchains);
         rvTravaux.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Au clic sur un travail -> affiche les détails
         assignmentAdapter = new AssignmentAdapter(assignment -> {
             viewModelAssignment.setSelectedAssignment(assignment);
             getParentFragmentManager().beginTransaction()
@@ -124,7 +116,6 @@ public class DashboardFragment extends Fragment {
         RecyclerView rvQuiz = view.findViewById(R.id.rvQuizDisponibles);
         rvQuiz.setLayoutManager(new LinearLayoutManager(getContext()));
         quizAdapter = new DashboardQuizAdapter(quiz -> {
-            // Ouvre l'activité QuizActivity pour passer le quiz
             Intent intent = new Intent(requireContext(), QuizActivity.class);
             intent.putExtra("titre", quiz.getTitre());
             startActivity(intent);
@@ -132,23 +123,17 @@ public class DashboardFragment extends Fragment {
         rvQuiz.setAdapter(quizAdapter);
 
         // --- Observation des données via LiveData ---
-        // observe() est le cœur du pattern Observer dans MVVM :
-        // Quand les données changent dans le ViewModel, le callback est automatiquement appelé
-        // getViewLifecycleOwner() lie l'observation au cycle de vie du Fragment
-        // (évite les fuites mémoire et les mises à jour sur un Fragment détruit)
 
         viewModelUser.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
-                // Quand l'utilisateur est chargé, on charge ses cours inscrits
                 List<String> enrolledIds = user.getEnrolledCourseIds();
                 if (enrolledIds != null && !enrolledIds.isEmpty()) {
                     viewModelCours.chargerCoursInscrits(enrolledIds);
-                    viewModelAssignment.chargerTravauxProchains(enrolledIds);
+                    // On charge tous les travaux pour calculer le résumé (comme sur la page Travaux)
+                    viewModelAssignment.chargerTousLesAssignments();
                 }
 
-                // Charge les quiz disponibles depuis le serveur en arrière-plan
-                // On utilise un ExecutorService car l'appel réseau ne peut pas
-                // être fait sur le thread principal (Android lance une NetworkOnMainThreadException)
+                // Charge les quiz disponibles
                 ExecutorService executor = Executors.newSingleThreadExecutor();
                 executor.execute(() -> {
                     try {
@@ -156,15 +141,12 @@ public class DashboardFragment extends Fragment {
                         List<Quiz> available = new ArrayList<>();
                         if (allQuizzes != null) {
                             for (Quiz q : allQuizzes) {
-                                // Filtre les quiz "non commencé" pour le tableau de bord
                                 if (q.getStatut() != null
                                         && q.getStatut().equalsIgnoreCase("non commencé")) {
                                     available.add(q);
                                 }
                             }
                         }
-                        // post() exécute le code sur le thread principal (UI thread)
-                        // Nécessaire car on ne peut modifier les vues que depuis le thread UI
                         List<Quiz> finalAvailable = available;
                         if (isAdded()) {
                             requireActivity().runOnUiThread(() -> {
@@ -178,19 +160,72 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        // Quand la liste des cours inscrits est mise à jour dans le ViewModel,
-        // on met à jour l'adaptateur du RecyclerView
         viewModelCours.getEnrolledCourses().observe(getViewLifecycleOwner(), courses -> {
             if (courses != null) {
                 coursAdapter.setCoursList(courses);
             }
         });
 
-        // Quand la liste des travaux prochains est mise à jour
+        // Observation de la liste des travaux
         viewModelAssignment.getAssignmentList().observe(getViewLifecycleOwner(), assignments -> {
             if (assignments != null) {
-                assignmentAdapter.setAssignmentList(assignments);
+                // 1. Met à jour les compteurs du résumé (tous les travaux)
+                mettreAJourCompteurs(assignments);
+
+                // 2. Filtre pour la liste "Travaux à remettre bientôt" 
+                // (uniquement statut "à faire" et cours inscrits)
+                List<Assignment> upcoming = new ArrayList<>();
+                List<String> enrolledIds = null;
+                if (viewModelUser.getUser().getValue() != null) {
+                    enrolledIds = viewModelUser.getUser().getValue().getEnrolledCourseIds();
+                }
+
+                if (enrolledIds != null) {
+                    for (Assignment a : assignments) {
+                        if (enrolledIds.contains(a.getCourseId())
+                                && a.getStatus() != null
+                                && a.getStatus().equalsIgnoreCase("à faire")) {
+                            upcoming.add(a);
+                        }
+                    }
+                }
+                assignmentAdapter.setAssignmentList(upcoming);
             }
         });
+    }
+
+    /**
+     * Calcule et affiche le nombre de travaux par statut.
+     * Copie de la logique présente dans HomeworksFragments.
+     *
+     * @param assignments La liste complète des travaux
+     */
+    private void mettreAJourCompteurs(List<Assignment> assignments) {
+        int aFaire = 0, remis = 0, retard = 0, corrige = 0;
+
+        for (Assignment a : assignments) {
+            String statut = a.getStatus();
+            if (statut != null) {
+                switch (statut.toLowerCase()) {
+                    case "à faire":
+                        aFaire++;
+                        break;
+                    case "remis":
+                        remis++;
+                        break;
+                    case "en retard":
+                        retard++;
+                        break;
+                    case "corrigé":
+                        corrige++;
+                        break;
+                }
+            }
+        }
+
+        if (tvCountAFaire != null) tvCountAFaire.setText(String.valueOf(aFaire));
+        if (tvCountRemis != null) tvCountRemis.setText(String.valueOf(remis));
+        if (tvCountRetard != null) tvCountRetard.setText(String.valueOf(retard));
+        if (tvCountCorrige != null) tvCountCorrige.setText(String.valueOf(corrige));
     }
 }

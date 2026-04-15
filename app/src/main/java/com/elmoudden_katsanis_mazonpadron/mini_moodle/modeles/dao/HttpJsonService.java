@@ -136,16 +136,16 @@ public class HttpJsonService {
         return null;
     }
 
+    /**
+     * Met à jour les informations de profil de l'utilisateur.
+     * Utilise PATCH pour ne modifier que les champs de profil et éviter
+     * d'écraser par accident les listes d'IDs (cours, travaux).
+     */
     public boolean enregistrerUser(User user) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-        if (user.getEnrolledCourseIds() == null) user.setEnrolledCourseIds(new ArrayList<>());
-        if (user.getQuizResults() == null) user.setQuizResults(new ArrayList<>());
-        if (user.getCompletedAssignmentIds() == null) user.setCompletedAssignmentIds(new ArrayList<>());
-
         JSONObject obj = new JSONObject();
-        obj.put("id", user.getId());
         obj.put("username", user.getUsername());
         obj.put("email", user.getEmail());
         obj.put("password", user.getPassword());
@@ -154,9 +154,8 @@ public class HttpJsonService {
         obj.put("telephone", user.getTelephone());
         obj.put("photoUrl", user.getPhotoUrl());
 
-        obj.put("enrolledCourseIds", new org.json.JSONArray(user.getEnrolledCourseIds()));
-        obj.put("quizResults", new org.json.JSONArray(user.getQuizResults()));
-        obj.put("completedAssignmentIds", new org.json.JSONArray(user.getCompletedAssignmentIds()));
+        // On ne met pas enrolledCourseIds, quizResults, completedAssignmentIds
+        // dans le PATCH pour être sûr de ne pas les écraser si l'objet local est incomplet.
 
         RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
 
@@ -164,12 +163,12 @@ public class HttpJsonService {
 
         Request request = new Request.Builder()
                 .url(url)
-                .put(corpsRequete)
+                .patch(corpsRequete) // Changement de PUT à PATCH
                 .build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
             if (response.code() != 200) {
-                Log.e("HttpJsonService", "Erreur Save: " + response.code() + " " + response.message());
+                Log.e("HttpJsonService", "Erreur Save Profile (PATCH): " + response.code() + " " + response.message());
             }
             return response.code() == 200;
         }

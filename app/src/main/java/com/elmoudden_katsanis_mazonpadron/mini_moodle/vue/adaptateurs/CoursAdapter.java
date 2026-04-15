@@ -43,8 +43,26 @@ public class CoursAdapter extends RecyclerView.Adapter<CoursAdapter.CoursViewHol
     @Override
     public void onBindViewHolder(@NonNull CoursViewHolder holder, int position) {
         Cours cours = coursList.get(position);
-        holder.tvCodeCours.setText(cours.getCodeCours());
+        
         holder.tvTitreCours.setText(cours.getTitre());
+        
+        // Formate la session : "Hiver 2024" -> "H24"
+        String rawSession = cours.getSession();
+        if (rawSession != null && !rawSession.isEmpty()) {
+            String firstLetter = rawSession.substring(0, 1).toUpperCase();
+            String lastTwo = "";
+            if (rawSession.length() >= 2) {
+                lastTwo = rawSession.substring(rawSession.length() - 2);
+            }
+            holder.tvSession.setText(firstLetter + lastTwo);
+        } else {
+            holder.tvSession.setText("");
+        }
+
+        // Affiche l'enseignant et le code du cours sur la troisième ligne
+        String details = (cours.getEnseignant() != null ? cours.getEnseignant() : "Enseignant inconnu")
+                + (cours.getCodeCours() != null ? " - " + cours.getCodeCours() : "");
+        holder.tvEnseignantEtCode.setText(details);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -59,13 +77,15 @@ public class CoursAdapter extends RecyclerView.Adapter<CoursAdapter.CoursViewHol
     }
 
     static class CoursViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCodeCours;
+        TextView tvSession;
         TextView tvTitreCours;
+        TextView tvEnseignantEtCode;
 
         CoursViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvCodeCours = itemView.findViewById(R.id.tvCodeCours);
+            tvSession = itemView.findViewById(R.id.tvSession);
             tvTitreCours = itemView.findViewById(R.id.tvTitreCours);
+            tvEnseignantEtCode = itemView.findViewById(R.id.tvEnseignantEtCode);
         }
     }
 }

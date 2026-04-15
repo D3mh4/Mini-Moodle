@@ -50,6 +50,15 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         String statut = assignment.getStatus();
         holder.tvStatut.setText(statut != null ? statut : "---");
 
+        // Affichage de la note si disponible et si le travail est corrigé
+        if (statut != null && statut.equalsIgnoreCase("corrigé") && assignment.getGrade() != null) {
+            String noteStr = assignment.getGrade() + " / " + assignment.getTotalPoints();
+            holder.tvNoteDevoir.setText(noteStr);
+            holder.tvNoteDevoir.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvNoteDevoir.setVisibility(View.GONE);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onAssignmentClick(assignment);
@@ -66,12 +75,14 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         TextView tvTitreDevoir;
         TextView tvDateLimite;
         TextView tvStatut;
+        TextView tvNoteDevoir;
 
         AssignmentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitreDevoir = itemView.findViewById(R.id.tvTitreDevoir);
             tvDateLimite = itemView.findViewById(R.id.tvDateLimite);
             tvStatut = itemView.findViewById(R.id.tvStatutDevoir);
+            tvNoteDevoir = itemView.findViewById(R.id.tvNoteDevoir);
         }
     }
 }
