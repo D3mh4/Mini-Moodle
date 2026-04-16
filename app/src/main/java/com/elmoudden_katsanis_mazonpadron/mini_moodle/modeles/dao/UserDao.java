@@ -13,11 +13,15 @@ public class UserDao {
         return new HttpJsonService().getUsers();
     }
 
-    public static boolean enregistrer(User user) throws IOException, JSONException{
+    public static boolean enregistrer(User user) throws IOException, JSONException {
         return new HttpJsonService().enregistrerUser(user);
     }
 
     public static boolean inscrire(User user) throws IOException, JSONException {
         return new HttpJsonService().inscrireUser(user);
+    }
+
+    public static boolean updateCompletedAssignments(String userId, List<String> completedIds) throws IOException, JSONException {
+        return new HttpJsonService().updateCompletedAssignments(userId, completedIds);
     }
 }

@@ -78,17 +78,17 @@ public class editProfileFragment extends Fragment implements View.OnClickListene
         if (v == btnSave) {
             User currentUser = viewModel.getUser().getValue();
             if (currentUser != null) {
-                User u = new User();
-                u.setId(currentUser.getId());
-                u.setNom(nom.getText().toString());
-                u.setPrenom(prenom.getText().toString());
-                u.setUsername(username.getText().toString());
-                u.setEmail(email.getText().toString());
-                u.setPassword(password.getText().toString());
-                u.setTelephone(telephone.getText().toString());
-                u.setPhotoUrl(url.getText().toString());
+                // On met à jour l'objet utilisateur existant pour conserver 
+                // les listes de cours et de travaux (enrolledCourseIds, etc.)
+                currentUser.setNom(nom.getText().toString());
+                currentUser.setPrenom(prenom.getText().toString());
+                currentUser.setUsername(username.getText().toString());
+                currentUser.setEmail(email.getText().toString());
+                currentUser.setPassword(password.getText().toString());
+                currentUser.setTelephone(telephone.getText().toString());
+                currentUser.setPhotoUrl(url.getText().toString());
 
-                viewModel.editUser(u);
+                viewModel.editUser(currentUser);
             }
         } else if (v == btnCancel) {
             getParentFragmentManager().popBackStack();

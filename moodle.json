@@ -1,0 +1,263 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "ahmed_e",
+      "email": "ahmed@ets.ca",
+      "password": "1234",
+      "nom": "Elmoudden",
+      "prenom": "Ahmed",
+      "telephone": "514-555-0001",
+      "photoUrl": "",
+      "enrolledCourseIds": [
+        "1",
+        "2",
+        "3"
+      ],
+      "quizResults": [],
+      "completedAssignmentIds": [
+        "2",
+        "4"
+      ]
+    },
+    {
+      "id": "2",
+      "username": "jean_d",
+      "email": "jean@ets.ca",
+      "password": "1234",
+      "nom": "Dupont",
+      "prenom": "Jean",
+      "telephone": "514-555-0002",
+      "photoUrl": "",
+      "enrolledCourseIds": [
+        "1",
+        "2",
+        "3"
+      ],
+      "quizResults": [],
+      "completedAssignmentIds": []
+    }
+  ],
+  "courses": [
+    {
+      "id": "1",
+      "codeCours": "TCH055",
+      "titre": "Base de données",
+      "description": "Introduction aux bases de données relationnelles, SQL, modélisation et normalisation. Ce cours couvre les principes fondamentaux des systèmes de gestion de bases de données.",
+      "enseignant": "Samah Kansab",
+      "session": "H2026",
+      "urlImage": "",
+      "annonces": [
+        "Rappel : Le laboratoire noté #4 est à remettre le 15 avril.",
+        "Les notes du quiz #3 sont disponibles.",
+        "Séance de révision le vendredi 11 avril à 14h."
+      ]
+    },
+    {
+      "id": "2",
+      "codeCours": "TCH056",
+      "titre": "Développement web",
+      "description": "Développement d'applications web modernes avec HTML, CSS, JavaScript et frameworks. Introduction aux architectures client-serveur et aux API REST.",
+      "enseignant": "Lazhar Khelifi",
+      "session": "H2026",
+      "urlImage": "",
+      "annonces": [
+        "Le projet final est maintenant disponible sur ENA.",
+        "N'oubliez pas de former vos équipes avant le 21 mars."
+      ]
+    },
+    {
+      "id": "3",
+      "codeCours": "TCH057",
+      "titre": "Développement mobile",
+      "description": "Conception et développement d'applications mobiles Android en Java. Principes d'ergonomie et d'expérience utilisateur (UX). Architecture MVVM, RecyclerView, API REST.",
+      "enseignant": "Lazhar Khelifi",
+      "session": "H2026",
+      "urlImage": "",
+      "annonces": [
+        "Le projet Mini Moodle est à remettre le 19 avril.",
+        "Quiz du cours #10 est maintenant disponible."
+      ]
+    }
+  ],
+  "assignments": [
+    {
+      "id": "1",
+      "courseId": "1",
+      "title": "Laboratoire noté #4",
+      "description": "Création et manipulation d'une base de données relationnelle avec requêtes SQL avancées.",
+      "dueDate": "2026-04-15",
+      "instructions": "Réalisez les exercices du cahier de laboratoire. Soumettez votre fichier SQL et le rapport en PDF.",
+      "status": "À faire",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "laboratoire"
+    },
+    {
+      "id": "2",
+      "courseId": "2",
+      "title": "TP #3 - API REST",
+      "description": "Développement d'une API REST avec Node.js et Express.",
+      "dueDate": "2026-04-18",
+      "instructions": "Implémentez les endpoints CRUD pour la gestion des produits. Testez avec Postman.",
+      "status": "À faire",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 25,
+      "type": "tp"
+    },
+    {
+      "id": "3",
+      "courseId": "1",
+      "title": "Laboratoire noté #3",
+      "description": "Modélisation entité-relation et normalisation.",
+      "dueDate": "2026-03-28",
+      "instructions": "Réalisez le diagramme ER et normalisez jusqu'à la 3NF.",
+      "status": "Corrigé",
+      "grade": 18,
+      "comment": "Bon travail! La normalisation est bien faite. Attention aux cardinalités.",
+      "totalPoints": 20,
+      "type": "laboratoire"
+    },
+    {
+      "id": "4",
+      "courseId": "3",
+      "title": "Projet Mini Moodle",
+      "description": "Développement d'une application mobile Android complète.",
+      "dueDate": "2026-04-19",
+      "instructions": "Développez l'application Mini Moodle selon l'énoncé. Incluez le code source, les maquettes Figma et le rapport.",
+      "status": "À faire",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 40,
+      "type": "projet"
+    },
+    {
+      "id": "5",
+      "courseId": "2",
+      "title": "TP #2 - Frontend",
+      "description": "Création d'une interface utilisateur responsive avec CSS Grid et Flexbox.",
+      "dueDate": "2026-04-20",
+      "instructions": "Intégrez la maquette fournie en HTML/CSS responsive.",
+      "status": "À faire",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "tp"
+    },
+    {
+      "id": "6",
+      "courseId": "3",
+      "title": "Laboratoire #2 - RecyclerView",
+      "description": "Implémentation d'un RecyclerView avec adaptateur personnalisé.",
+      "dueDate": "2026-03-15",
+      "instructions": "Créez une application affichant une liste de contacts avec RecyclerView.",
+      "status": "À faire",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 15,
+      "type": "laboratoire"
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "1",
+      "idCours": "TCH055",
+      "titre": "Quiz #3 - SQL avancé",
+      "nbrQuestions": 10,
+      "statut": "terminé",
+      "score": 8,
+      "questions": [
+        {
+          "enonce": "Quelle commande SQL permet de créer une table ?",
+          "type": "qcm",
+          "choix": [
+            "CREATE TABLE",
+            "MAKE TABLE",
+            "NEW TABLE"
+          ],
+          "bonneReponse": "CREATE TABLE"
+        },
+        {
+          "enonce": "JOIN est utilisé pour combiner des tables.",
+          "type": "vrai_faux",
+          "choix": [
+            "Vrai",
+            "Faux"
+          ],
+          "bonneReponse": "Vrai"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "idCours": "TCH057",
+      "titre": "Quiz du cours #10",
+      "nbrQuestions": 8,
+      "statut": "non commencé",
+      "score": 0,
+      "questions": [
+        {
+          "enonce": "Quel composant Android affiche une liste recyclable ?",
+          "type": "qcm",
+          "choix": [
+            "ListView",
+            "RecyclerView",
+            "ScrollView"
+          ],
+          "bonneReponse": "RecyclerView"
+        },
+        {
+          "enonce": "MVVM signifie Model-View-ViewModel.",
+          "type": "vrai_faux",
+          "choix": [
+            "Vrai",
+            "Faux"
+          ],
+          "bonneReponse": "Vrai"
+        },
+        {
+          "enonce": "Quel outil gère les dépendances dans un projet Android ?",
+          "type": "qcm",
+          "choix": [
+            "Maven",
+            "Gradle",
+            "npm"
+          ],
+          "bonneReponse": "Gradle"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "idCours": "TCH056",
+      "titre": "Quiz #5 - JavaScript",
+      "nbrQuestions": 12,
+      "statut": "non commencé",
+      "score": 0,
+      "questions": [
+        {
+          "enonce": "JavaScript est un langage typé statiquement.",
+          "type": "vrai_faux",
+          "choix": [
+            "Vrai",
+            "Faux"
+          ],
+          "bonneReponse": "Faux"
+        },
+        {
+          "enonce": "Quelle méthode ajoute un élément à la fin d'un tableau ?",
+          "type": "qcm",
+          "choix": [
+            "push()",
+            "pop()",
+            "shift()"
+          ],
+          "bonneReponse": "push()"
+        }
+      ]
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
