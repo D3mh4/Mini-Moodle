@@ -1,12 +1,10 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,53 +19,47 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelCours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao.QuizDao;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Assignment;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Cours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.QuizActivity;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.AssignmentAdapter;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.CoursAdapter;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.DashboardQuizAdapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * Fragment du Tableau de Bord (Dashboard).
  *
- * C'est l'écran principal après la connexion. Il affiche un résumé des
- * informations importantes de l'étudiant :
- * - Les cours auxquels il est inscrit
- * - Résumé des travaux par statut (À faire, Remis, En retard, Corrigé)
- * - Les travaux à remettre bientôt (statut "à faire")
- * - Les quiz disponibles (statut "non commencé")
- *
- * Ce fragment utilise 3 ViewModels (ViewModelUser, ViewModelCours, ViewModelAssignment)
- * pour récupérer les données de manière réactive via LiveData.
+ * Les quiz disponibles montrent ceux que l'utilisateur n'a PAS encore complétés
+ * (basé sur quizResults). Cliquer un quiz ici amène l'utilisateur à l'onglet
+ * Quiz où il pourra le démarrer (pas de lancement direct depuis le dashboard).
  */
 public class DashboardFragment extends Fragment {
 
-    // ViewModels partagés avec l'Activity parente (NavActivity)
     private ViewModelUser viewModelUser;
     private ViewModelCours viewModelCours;
     private ViewModelAssignment viewModelAssignment;
 
-    // Adaptateurs pour les 3 RecyclerViews du tableau de bord
     private CoursAdapter coursAdapter;
     private AssignmentAdapter assignmentAdapter;
     private DashboardQuizAdapter quizAdapter;
 
-    // Compteurs de statut pour le résumé des travaux
     private TextView tvCountAFaire, tvCountRemis, tvCountRetard, tvCountCorrige;
 
+    // Cache de tous les quiz, pour re-filtrer localement quand quizResults change
+    private List<Quiz> cacheTousLesQuizzes = new ArrayList<>();
+
     public DashboardFragment() {
-        // Constructeur vide requis par le framework Android
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // inflate() convertit le XML du layout en objets View Java
         return inflater.inflate(R.layout.dashboard_fragment, container, false);
     }
 
@@ -75,21 +67,17 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // --- Initialisation des ViewModels ---
         viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
         viewModelCours = new ViewModelProvider(requireActivity()).get(ViewModelCours.class);
         viewModelAssignment = new ViewModelProvider(requireActivity()).get(ViewModelAssignment.class);
 
-        // --- Récupération des vues du résumé ---
         tvCountAFaire = view.findViewById(R.id.tvCountAFaire);
         tvCountRemis = view.findViewById(R.id.tvCountRemis);
         tvCountRetard = view.findViewById(R.id.tvCountRetard);
         tvCountCorrige = view.findViewById(R.id.tvCountCorrige);
 
-        // --- Configuration du RecyclerView des cours ---
         RecyclerView rvCours = view.findViewById(R.id.rvCoursInscrits);
         rvCours.setLayoutManager(new LinearLayoutManager(getContext()));
-
         coursAdapter = new CoursAdapter(cours -> {
             viewModelCours.setSelectedCours(cours);
             getParentFragmentManager().beginTransaction()
@@ -99,10 +87,8 @@ public class DashboardFragment extends Fragment {
         });
         rvCours.setAdapter(coursAdapter);
 
-        // --- Configuration du RecyclerView des travaux ---
         RecyclerView rvTravaux = view.findViewById(R.id.rvTravauxProchains);
         rvTravaux.setLayoutManager(new LinearLayoutManager(getContext()));
-
         assignmentAdapter = new AssignmentAdapter(assignment -> {
             viewModelAssignment.setSelectedAssignment(assignment);
             getParentFragmentManager().beginTransaction()
@@ -112,51 +98,37 @@ public class DashboardFragment extends Fragment {
         });
         rvTravaux.setAdapter(assignmentAdapter);
 
-        // --- Configuration du RecyclerView des quiz ---
         RecyclerView rvQuiz = view.findViewById(R.id.rvQuizDisponibles);
         rvQuiz.setLayoutManager(new LinearLayoutManager(getContext()));
-        quizAdapter = new DashboardQuizAdapter(quiz -> {
-            Intent intent = new Intent(requireContext(), QuizActivity.class);
-            intent.putExtra("titre", quiz.getTitre());
-            startActivity(intent);
-        });
+        // Au clic sur un quiz du dashboard : on ne lance plus le quiz directement,
+        // on amène l'utilisateur à l'onglet Quiz via la BottomNavigationView.
+        quizAdapter = new DashboardQuizAdapter(quiz -> naviguerVersOngletQuiz());
         rvQuiz.setAdapter(quizAdapter);
 
-        // --- Observation des données via LiveData ---
-
         viewModelUser.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                List<String> enrolledIds = user.getEnrolledCourseIds();
-                if (enrolledIds != null && !enrolledIds.isEmpty()) {
-                    viewModelCours.chargerCoursInscrits(enrolledIds);
-                    // On charge tous les travaux pour calculer le résumé (comme sur la page Travaux)
-                    viewModelAssignment.chargerTousLesAssignments();
-                }
+            if (user == null) return;
 
-                // Charge les quiz disponibles
+            List<String> enrolledIds = user.getEnrolledCourseIds();
+            if (enrolledIds != null && !enrolledIds.isEmpty()) {
+                viewModelCours.chargerCoursInscrits(enrolledIds);
+                viewModelAssignment.chargerTousLesAssignments();
+            }
+
+            if (cacheTousLesQuizzes.isEmpty()) {
                 ExecutorService executor = Executors.newSingleThreadExecutor();
                 executor.execute(() -> {
                     try {
-                        List<Quiz> allQuizzes = QuizDao.getQuizzes();
-                        List<Quiz> available = new ArrayList<>();
-                        if (allQuizzes != null) {
-                            for (Quiz q : allQuizzes) {
-                                if (q.getStatut() != null
-                                        && q.getStatut().equalsIgnoreCase("non commencé")) {
-                                    available.add(q);
-                                }
-                            }
-                        }
-                        List<Quiz> finalAvailable = available;
+                        List<Quiz> all = QuizDao.getQuizzes();
+                        cacheTousLesQuizzes = all != null ? all : new ArrayList<>();
                         if (isAdded()) {
-                            requireActivity().runOnUiThread(() -> {
-                                quizAdapter.setQuizList(finalAvailable);
-                            });
+                            requireActivity().runOnUiThread(this::rafraichirQuizzesDisponibles);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 });
+            } else {
+                rafraichirQuizzesDisponibles();
             }
         });
 
@@ -166,14 +138,10 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        // Observation de la liste des travaux
         viewModelAssignment.getAssignmentList().observe(getViewLifecycleOwner(), assignments -> {
             if (assignments != null) {
-                // 1. Met à jour les compteurs du résumé (tous les travaux)
                 mettreAJourCompteurs(assignments);
 
-                // 2. Filtre pour la liste "Travaux à remettre bientôt" 
-                // (uniquement statut "à faire" et cours inscrits)
                 List<Assignment> upcoming = new ArrayList<>();
                 List<String> enrolledIds = null;
                 if (viewModelUser.getUser().getValue() != null) {
@@ -195,11 +163,44 @@ public class DashboardFragment extends Fragment {
     }
 
     /**
-     * Calcule et affiche le nombre de travaux par statut.
-     * Copie de la logique présente dans HomeworksFragments.
-     *
-     * @param assignments La liste complète des travaux
+     * Bascule l'onglet actif de la BottomNavigationView vers "Quiz".
+     * setSelectedItemId déclenche le listener de NavActivity qui fait
+     * déjà le replaceFragment vers QuizFragment.
      */
+    private void naviguerVersOngletQuiz() {
+        if (getActivity() == null) return;
+        BottomNavigationView nav = requireActivity().findViewById(R.id.bottomNavigationView);
+        if (nav != null) {
+            nav.setSelectedItemId(R.id.quiz);
+        }
+    }
+
+    /**
+     * Retire de la liste les quiz déjà complétés par l'utilisateur.
+     */
+    private void rafraichirQuizzesDisponibles() {
+        if (quizAdapter == null) return;
+
+        Set<String> doneIds = new HashSet<>();
+        if (viewModelUser.getUser().getValue() != null
+                && viewModelUser.getUser().getValue().getQuizResults() != null) {
+            for (ResultatQuiz r : viewModelUser.getUser().getValue().getQuizResults()) {
+                if (r.getQuizId() != null) {
+                    doneIds.add(r.getQuizId());
+                }
+            }
+        }
+
+        List<Quiz> disponibles = new ArrayList<>();
+        for (Quiz q : cacheTousLesQuizzes) {
+            if (q.getId() != null && !doneIds.contains(q.getId())) {
+                disponibles.add(q);
+            }
+        }
+
+        quizAdapter.setQuizList(disponibles);
+    }
+
     private void mettreAJourCompteurs(List<Assignment> assignments) {
         int aFaire = 0, remis = 0, retard = 0, corrige = 0;
 

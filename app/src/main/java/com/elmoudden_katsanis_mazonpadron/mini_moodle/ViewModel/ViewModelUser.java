@@ -91,6 +91,17 @@ public class ViewModelUser extends ViewModel {
         });
     }
 
+    /**
+     * Recharge l'utilisateur courant depuis le serveur.
+     * Utilisé après une modification distante (ex: après la sauvegarde
+     * d'un résultat de quiz) pour rafraîchir quizResults et autres champs.
+     */
+    public void rechargerUserActuel() {
+        User current = user.getValue();
+        if (current == null || current.getId() == null) return;
+        chargerUserParId(current.getId());
+    }
+
     public void editUser(User u) {
         executorService.execute(() -> {
             try {

@@ -256,4 +256,40 @@ public class HttpJsonService {
             return response.isSuccessful();
         }
     }
+
+    /**
+     * Met à jour uniquement la liste des résultats de quiz d'un utilisateur.
+     * Utilise PATCH pour ne pas écraser les autres champs de l'utilisateur.
+     */
+    public boolean updateQuizResults(String userId, List<com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz> results) throws IOException, JSONException {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        org.json.JSONArray arr = new org.json.JSONArray();
+        if (results != null) {
+            for (com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz r : results) {
+                JSONObject o = new JSONObject();
+                o.put("quizId", r.getQuizId());
+                o.put("score", r.getScore());
+                o.put("total", r.getTotal());
+                arr.put(o);
+            }
+        }
+
+        JSONObject obj = new JSONObject();
+        obj.put("quizResults", arr);
+
+        RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
+
+        String url = URL_POINT_ENTREE + "/users/" + userId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .patch(corpsRequete)
+                .build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return response.isSuccessful();
+        }
+    }
 }

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Layout d'un item de quiz affiché sur le tableau de bord.
-    Design similaire aux cartes de cours/travaux avec
-    le code du cours, le titre du quiz et une flèche.
--->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,7 +22,6 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Code du cours associé au quiz -->
             <TextView
                 android:id="@+id/tvQuizCoursCode"
                 android:layout_width="wrap_content"
@@ -36,7 +30,6 @@
                 android:textSize="12sp"
                 android:textColor="@color/orange" />
 
-            <!-- Titre du quiz -->
             <TextView
                 android:id="@+id/tvQuizTitre"
                 android:layout_width="wrap_content"
@@ -46,17 +39,26 @@
                 android:textStyle="bold"
                 android:textColor="@color/black" />
 
-            <!-- Statut ou info supplémentaire -->
             <TextView
                 android:id="@+id/tvQuizInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Expire dans ..."
+                android:text="8 questions"
                 android:textSize="12sp"
                 android:textColor="@color/gray"
                 android:layout_marginTop="2dp" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvQuizScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0/0"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/orange"
+            android:visibility="gone" />
 
     </LinearLayout>
 

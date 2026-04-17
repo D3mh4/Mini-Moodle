@@ -194,5 +194,32 @@
             android:visibility="gone"
             android:layout_marginBottom="16dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quiz"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/orange"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDetailQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tvAucunQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aucun quiz pour ce cours."
+            android:textSize="14sp"
+            android:textColor="@color/gray"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
     </LinearLayout>
 </ScrollView>

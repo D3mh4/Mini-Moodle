@@ -1,5 +1,6 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,8 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelAssignment;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelCours;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelQuiz;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Cours;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.QuizActivity;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.AssignmentAdapter;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.DashboardQuizAdapter;
 
 import java.util.List;
 
@@ -29,7 +36,10 @@ public class CourseDetailFragment extends Fragment {
 
     private ViewModelCours viewModelCours;
     private ViewModelAssignment viewModelAssignment;
+    private ViewModelQuiz viewModelQuiz;
+    private ViewModelUser viewModelUser;
     private AssignmentAdapter assignmentAdapter;
+    private DashboardQuizAdapter quizAdapter;
 
     // Vues de l'en-tête
     private TextView tvCodeCours, tvTitreCours, tvEnseignant, tvSession;
@@ -45,6 +55,13 @@ public class CourseDetailFragment extends Fragment {
     private RecyclerView rvTravaux;
     private TextView tvAucunTravail;
 
+    // RecyclerView pour les quiz du cours
+    private RecyclerView rvQuiz;
+    private TextView tvAucunQuiz;
+
+    // Lanceur pour QuizActivity (recharge l'utilisateur à la fin du quiz)
+    private ActivityResultLauncher<Intent> quizLauncher;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.course_detail_fragment, container, false);
@@ -57,6 +74,8 @@ public class CourseDetailFragment extends Fragment {
         // --- Initialisation des ViewModels ---
         viewModelCours = new ViewModelProvider(requireActivity()).get(ViewModelCours.class);
         viewModelAssignment = new ViewModelProvider(requireActivity()).get(ViewModelAssignment.class);
+        viewModelQuiz = new ViewModelProvider(requireActivity()).get(ViewModelQuiz.class);
+        viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
 
         // --- Récupération de toutes les vues ---
         tvCodeCours = view.findViewById(R.id.tvDetailCodeCours);
@@ -68,6 +87,18 @@ public class CourseDetailFragment extends Fragment {
         tvAucuneAnnonce = view.findViewById(R.id.tvAucuneAnnonce);
         rvTravaux = view.findViewById(R.id.rvDetailTravaux);
         tvAucunTravail = view.findViewById(R.id.tvAucunTravail);
+        rvQuiz = view.findViewById(R.id.rvDetailQuiz);
+        tvAucunQuiz = view.findViewById(R.id.tvAucunQuiz);
+
+        // --- Lanceur de QuizActivity : recharge l'utilisateur après un quiz ---
+        quizLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == requireActivity().RESULT_OK) {
+                        viewModelUser.rechargerUserActuel();
+                    }
+                }
+        );
 
         // --- Bouton retour ---
         view.findViewById(R.id.btnRetour).setOnClickListener(v -> {
@@ -85,11 +116,25 @@ public class CourseDetailFragment extends Fragment {
         });
         rvTravaux.setAdapter(assignmentAdapter);
 
+        // --- Configuration du RecyclerView des quiz du cours ---
+        rvQuiz.setLayoutManager(new LinearLayoutManager(getContext()));
+        quizAdapter = new DashboardQuizAdapter(quiz -> {
+            Intent intent = new Intent(requireContext(), QuizActivity.class);
+            intent.putExtra("quiz", quiz);
+            if (viewModelUser.getUser().getValue() != null) {
+                intent.putExtra("userId", viewModelUser.getUser().getValue().getId());
+            }
+            quizLauncher.launch(intent);
+        });
+        rvQuiz.setAdapter(quizAdapter);
+
         // --- Observation du cours sélectionné ---
         viewModelCours.getSelectedCours().observe(getViewLifecycleOwner(), cours -> {
             if (cours != null) {
                 afficherDetailsCours(cours);
                 viewModelAssignment.chargerAssignmentsParCours(cours.getId());
+                // Les quiz sont liés au code du cours, pas à l'ID numérique
+                viewModelQuiz.chargerQuizzesParCodeCours(cours.getCodeCours());
             }
         });
 
@@ -98,6 +143,22 @@ public class CourseDetailFragment extends Fragment {
             if (assignments != null) {
                 assignmentAdapter.setAssignmentList(assignments);
                 tvAucunTravail.setVisibility(assignments.isEmpty() ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        // --- Observation des quiz du cours ---
+        viewModelQuiz.getQuizzesByCourse().observe(getViewLifecycleOwner(), quizzes -> {
+            if (quizzes != null) {
+                quizAdapter.setQuizList(quizzes);
+                tvAucunQuiz.setVisibility(quizzes.isEmpty() ? View.VISIBLE : View.GONE);
+                rvQuiz.setVisibility(quizzes.isEmpty() ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        // Met à jour les scores affichés quand les résultats utilisateur changent
+        viewModelUser.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null && quizAdapter != null) {
+                quizAdapter.setUserResults(user.getQuizResults());
             }
         });
     }

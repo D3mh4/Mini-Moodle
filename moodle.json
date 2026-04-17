@@ -2,11 +2,11 @@
   "users": [
     {
       "id": "1",
-      "username": "ahmed_e",
-      "email": "ahmed@ets.ca",
-      "password": "1234",
-      "nom": "Elmoudden",
-      "prenom": "Ahmed",
+      "username": "alice",
+      "email": "alice@ets.ca",
+      "password": "pass123",
+      "nom": "Tremblay",
+      "prenom": "Alice",
       "telephone": "514-555-0001",
       "photoUrl": "",
       "enrolledCourseIds": [
@@ -14,20 +14,51 @@
         "2",
         "3"
       ],
-      "quizResults": [],
-      "completedAssignmentIds": [
-        "2",
-        "4"
-      ]
+      "quizResults": [
+        {
+          "quizId": "3",
+          "score": 0,
+          "total": 2
+        },
+        {
+          "quizId": "2",
+          "score": 2,
+          "total": 3
+        }
+      ],
+      "completedAssignmentIds": []
     },
     {
       "id": "2",
-      "username": "jean_d",
-      "email": "jean@ets.ca",
-      "password": "1234",
-      "nom": "Dupont",
-      "prenom": "Jean",
+      "username": "bob",
+      "email": "bob@ets.ca",
+      "password": "pass123",
+      "nom": "Gagnon",
+      "prenom": "Bob",
       "telephone": "514-555-0002",
+      "photoUrl": "",
+      "enrolledCourseIds": [
+        "1",
+        "2",
+        "3"
+      ],
+      "quizResults": [
+        {
+          "quizId": "3",
+          "score": 0,
+          "total": 2
+        }
+      ],
+      "completedAssignmentIds": []
+    },
+    {
+      "id": "3",
+      "username": "claire",
+      "email": "claire@ets.ca",
+      "password": "pass123",
+      "nom": "Roy",
+      "prenom": "Claire",
+      "telephone": "514-555-0003",
       "photoUrl": "",
       "enrolledCourseIds": [
         "1",
@@ -36,26 +67,6 @@
       ],
       "quizResults": [],
       "completedAssignmentIds": []
-    },
-    {
-      "id": "HXqUGsFEO1Y",
-      "username": "",
-      "email": "allo@allo.com",
-      "password": "allo",
-      "nom": "allo",
-      "prenom": "allo",
-      "telephone": "",
-      "photoUrl": "",
-      "enrolledCourseIds": [
-        "1",
-        "2",
-        "3"
-      ],
-      "quizResults": [],
-      "completedAssignmentIds": [
-        "4",
-        "5"
-      ]
     }
   ],
   "courses": [

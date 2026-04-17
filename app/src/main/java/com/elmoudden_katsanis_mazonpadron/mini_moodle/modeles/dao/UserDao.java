@@ -24,4 +24,7 @@ public class UserDao {
     public static boolean updateCompletedAssignments(String userId, List<String> completedIds) throws IOException, JSONException {
         return new HttpJsonService().updateCompletedAssignments(userId, completedIds);
     }
+    public static boolean updateQuizResults(String userId, List<com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz> results) throws IOException, JSONException {
+        return new HttpJsonService().updateQuizResults(userId, results);
+    }
 }

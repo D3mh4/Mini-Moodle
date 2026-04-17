@@ -12,19 +12,19 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelQuiz;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.QuizActivity;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.QuizAdapter;
+
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.QuizAdapter;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.QuizActivity;
-
-import androidx.lifecycle.ViewModelProvider;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelQuiz;
-import android.widget.Toast;
 
 public class QuizFragment extends Fragment {
 
@@ -33,6 +33,7 @@ public class QuizFragment extends Fragment {
     private List<Quiz> lesQuizzes;
     private ActivityResultLauncher<Intent> quizLauncher;
     private ViewModelQuiz viewModel;
+    private ViewModelUser viewModelUser;
 
     public QuizFragment() {
     }
@@ -52,8 +53,9 @@ public class QuizFragment extends Fragment {
         listView.setAdapter(adapter);
 
         viewModel = new ViewModelProvider(this).get(ViewModelQuiz.class);
+        viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
 
-        quizLauncher = registerForActivityResult( new ActivityResultContracts.StartActivityForResult(),
+        quizLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK) {
                         Intent data = result.getData();
@@ -61,6 +63,9 @@ public class QuizFragment extends Fragment {
                             int score = data.getIntExtra("score", 0);
                             Toast.makeText(getContext(), "Score: " + score, Toast.LENGTH_SHORT).show();
                         }
+                        // Recharge l'utilisateur → l'observer ci-dessous met à jour
+                        // le statut "Terminé" et le score affichés dans l'adaptateur
+                        viewModelUser.rechargerUserActuel();
                     }
                 }
         );
@@ -79,12 +84,23 @@ public class QuizFragment extends Fragment {
             }
         });
 
+        // Observer sur l'utilisateur : pousse ses quizResults dans l'adaptateur
+        // pour que le statut et le score s'affichent correctement
+        viewModelUser.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null && adapter != null) {
+                adapter.setUserResults(user.getQuizResults());
+            }
+        });
+
         viewModel.chargerQuizzes();
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Quiz quiz = lesQuizzes.get(position);
             Intent intent = new Intent(requireContext(), QuizActivity.class);
             intent.putExtra("quiz", quiz);
+            if (viewModelUser.getUser().getValue() != null) {
+                intent.putExtra("userId", viewModelUser.getUser().getValue().getId());
+            }
             quizLauncher.launch(intent);
         });
     }

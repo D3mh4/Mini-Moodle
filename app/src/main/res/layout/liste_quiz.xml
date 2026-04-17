@@ -17,40 +17,59 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvQuizCoursCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TCH057"
+                    android:textSize="12sp"
+                    android:textColor="@color/orange" />
+
+                <TextView
+                    android:id="@+id/tvTitre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Titre du Quiz"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/tvStatut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/button_template"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="Non commencé"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvTitre"
+                android:id="@+id/tvNoteQuiz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Titre du Quiz"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvNbQuestions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="10 Questions"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvStatut"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/button_template"
-                android:backgroundTint="?attr/colorSecondary"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Statut"
-                android:textColor="@android:color/white"
-                android:textSize="12sp" />
+                android:text="0/0"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/orange"
+                android:visibility="gone" />
 
         </LinearLayout>
 
