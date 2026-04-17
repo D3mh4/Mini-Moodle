@@ -25,11 +25,11 @@
             android:id="@+id/tvSectionCours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Les cours inscrits:"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/orange"
-            android:layout_marginBottom="8dp" />
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCoursInscrits"
@@ -38,15 +38,22 @@
             android:nestedScrollingEnabled="false"
             android:layout_marginBottom="16dp" />
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="?android:attr/listDivider" />
+
         <TextView
             android:id="@+id/tvSectionTravaux"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Les travaux à remettre bientôt :"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/orange"
-            android:layout_marginBottom="8dp" />
+            android:textStyle="bold" />
 
         <!-- Résumé des travaux ajouté ici -->
         <com.google.android.material.card.MaterialCardView
@@ -85,8 +92,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="À faire"
-                        android:textSize="11sp"
-                        android:textColor="@color/orange" />
+                        android:textColor="@color/black"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -109,8 +116,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Remis"
-                        android:textSize="11sp"
-                        android:textColor="@color/orange" />
+                        android:textColor="@color/black"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -133,8 +140,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="En retard"
-                        android:textSize="11sp"
-                        android:textColor="@color/orange" />
+                        android:textColor="@color/black"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -157,8 +164,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Corrigé"
-                        android:textSize="11sp"
-                        android:textColor="@color/orange" />
+                        android:textColor="@color/black"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -171,15 +178,22 @@
             android:nestedScrollingEnabled="false"
             android:layout_marginBottom="16dp" />
 
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:background="?android:attr/listDivider" />
+
         <TextView
             android:id="@+id/tvSectionQuiz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Quiz disponibles :"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/orange"
-            android:layout_marginBottom="8dp" />
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvQuizDisponibles"

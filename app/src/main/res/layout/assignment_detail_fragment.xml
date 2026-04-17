@@ -24,16 +24,16 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@android:drawable/ic_media_previous"
-                app:tint="@color/orange" />
+                android:src="@android:drawable/ic_menu_revert"
+                app:tint="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:text="Retour"
-                android:textColor="@color/orange"
-                android:textSize="14sp"
-                android:layout_marginStart="4dp" />
+                android:textColor="@color/black"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
@@ -107,11 +107,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
                     android:text="Description"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/orange"
-                    android:layout_marginBottom="6dp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDetailDescDevoir"
@@ -124,12 +124,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Consignes"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/orange"
                     android:layout_marginTop="12dp"
-                    android:layout_marginBottom="6dp" />
+                    android:layout_marginBottom="6dp"
+                    android:text="Consignes"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDetailInstructions"
@@ -208,11 +208,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Soumission"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/orange"
-                    android:layout_marginBottom="8dp" />
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/etSoumissionUrl"

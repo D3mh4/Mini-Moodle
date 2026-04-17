@@ -24,16 +24,16 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@android:drawable/ic_media_previous"
-                app:tint="@color/orange" />
+                android:src="@android:drawable/ic_menu_revert"
+                app:tint="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:text="Retour"
-                android:textColor="@color/orange"
-                android:textSize="14sp"
-                android:layout_marginStart="4dp" />
+                android:textColor="@color/black"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
@@ -108,11 +108,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
                     android:text="Description"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/orange"
-                    android:layout_marginBottom="6dp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDetailDescription"
@@ -143,11 +143,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
                     android:text="Annonces"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/orange"
-                    android:layout_marginBottom="6dp" />
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:id="@+id/llAnnonces"
@@ -170,11 +170,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Travaux"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/orange"
-            android:layout_marginBottom="8dp" />
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvDetailTravaux"
@@ -197,11 +197,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Quiz"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/orange"
-            android:layout_marginBottom="8dp" />
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvDetailQuiz"

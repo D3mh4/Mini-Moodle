@@ -34,15 +34,15 @@
         android:id="@+id/etRechercheCours"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/button_template"
+        android:backgroundTint="@color/white"
+        android:drawableStart="?android:attr/actionModeWebSearchDrawable"
+        android:drawablePadding="8dp"
         android:hint="Rechercher un cours..."
         android:inputType="text"
         android:padding="12dp"
-        android:textSize="14sp"
-        android:background="@drawable/button_template"
-        android:backgroundTint="@color/white"
-        android:layout_marginBottom="12dp"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="8dp" />
+        android:textSize="14sp" />
 
     <!-- RecyclerView pour la liste complète des cours inscrits -->
     <androidx.recyclerview.widget.RecyclerView

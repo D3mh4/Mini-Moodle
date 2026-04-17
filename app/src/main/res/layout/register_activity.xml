@@ -9,7 +9,8 @@
     android:paddingTop="80dp"
     android:paddingRight="60dp"
     android:paddingBottom="80dp"
-    tools:context=".vue.MainActivity">
+    tools:context=".vue.MainActivity"
+    android:background="#F5F5F5">
 
     <ImageView
         android:id="@+id/imageView"

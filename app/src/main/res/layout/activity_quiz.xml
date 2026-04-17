@@ -8,12 +8,13 @@
     android:paddingLeft="60dp"
     android:paddingTop="80dp"
     android:paddingRight="60dp"
-    android:paddingBottom="80dp">
+    android:paddingBottom="80dp"
+    android:background="#F5F5F5">
 
     <ImageView
         android:id="@+id/imageViewLogo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -86,9 +87,18 @@
             android:id="@+id/btnValider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/button_template"
             android:text="Valider"
             app:backgroundTint="?attr/colorPrimary" />
+
+        <Button
+            android:id="@+id/btnRetour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_template"
+            android:text="Retour"
+            app:backgroundTint="?attr/colorSecondary" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
