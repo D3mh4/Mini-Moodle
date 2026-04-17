@@ -36,6 +36,26 @@
       ],
       "quizResults": [],
       "completedAssignmentIds": []
+    },
+    {
+      "id": "HXqUGsFEO1Y",
+      "username": "",
+      "email": "allo@allo.com",
+      "password": "allo",
+      "nom": "allo",
+      "prenom": "allo",
+      "telephone": "",
+      "photoUrl": "",
+      "enrolledCourseIds": [
+        "1",
+        "2",
+        "3"
+      ],
+      "quizResults": [],
+      "completedAssignmentIds": [
+        "4",
+        "5"
+      ]
     }
   ],
   "courses": [
@@ -170,23 +190,23 @@
       "score": 8,
       "questions": [
         {
-          "enonce": "Quelle commande SQL permet de créer une table ?",
+          "statement": "Quelle commande SQL permet de créer une table ?",
           "type": "qcm",
-          "choix": [
+          "choices": [
             "CREATE TABLE",
             "MAKE TABLE",
             "NEW TABLE"
           ],
-          "bonneReponse": "CREATE TABLE"
+          "correctAnswer": "CREATE TABLE"
         },
         {
-          "enonce": "JOIN est utilisé pour combiner des tables.",
+          "statement": "JOIN est utilisé pour combiner des tables.",
           "type": "vrai_faux",
-          "choix": [
+          "choices": [
             "Vrai",
             "Faux"
           ],
-          "bonneReponse": "Vrai"
+          "correctAnswer": "Vrai"
         }
       ]
     },
@@ -199,33 +219,33 @@
       "score": 0,
       "questions": [
         {
-          "enonce": "Quel composant Android affiche une liste recyclable ?",
+          "statement": "Quel composant Android affiche une liste recyclable ?",
           "type": "qcm",
-          "choix": [
+          "choices": [
             "ListView",
             "RecyclerView",
             "ScrollView"
           ],
-          "bonneReponse": "RecyclerView"
+          "correctAnswer": "RecyclerView"
         },
         {
-          "enonce": "MVVM signifie Model-View-ViewModel.",
+          "statement": "MVVM signifie Model-View-ViewModel.",
           "type": "vrai_faux",
-          "choix": [
+          "choices": [
             "Vrai",
             "Faux"
           ],
-          "bonneReponse": "Vrai"
+          "correctAnswer": "Vrai"
         },
         {
-          "enonce": "Quel outil gère les dépendances dans un projet Android ?",
+          "statement": "Quel outil gère les dépendances dans un projet Android ?",
           "type": "qcm",
-          "choix": [
+          "choices": [
             "Maven",
             "Gradle",
             "npm"
           ],
-          "bonneReponse": "Gradle"
+          "correctAnswer": "Gradle"
         }
       ]
     },
@@ -238,23 +258,23 @@
       "score": 0,
       "questions": [
         {
-          "enonce": "JavaScript est un langage typé statiquement.",
+          "statement": "JavaScript est un langage typé statiquement.",
           "type": "vrai_faux",
-          "choix": [
+          "choices": [
             "Vrai",
             "Faux"
           ],
-          "bonneReponse": "Faux"
+          "correctAnswer": "Faux"
         },
         {
-          "enonce": "Quelle méthode ajoute un élément à la fin d'un tableau ?",
+          "statement": "Quelle méthode ajoute un élément à la fin d'un tableau ?",
           "type": "qcm",
-          "choix": [
+          "choices": [
             "push()",
             "pop()",
             "shift()"
           ],
-          "bonneReponse": "push()"
+          "correctAnswer": "push()"
         }
       ]
     }
