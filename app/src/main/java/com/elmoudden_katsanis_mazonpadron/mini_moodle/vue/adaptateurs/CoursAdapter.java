@@ -43,10 +43,10 @@ public class CoursAdapter extends RecyclerView.Adapter<CoursAdapter.CoursViewHol
     @Override
     public void onBindViewHolder(@NonNull CoursViewHolder holder, int position) {
         Cours cours = coursList.get(position);
-        
-        holder.tvTitreCours.setText(cours.getTitre());
-        
-        // Formate la session : "Hiver 2024" -> "H24"
+
+        holder.tvTitreCours.setText(cours.getTitle());
+
+        // Formate la session : "Hiver 2026" -> "H26"
         String rawSession = cours.getSession();
         if (rawSession != null && !rawSession.isEmpty()) {
             String firstLetter = rawSession.substring(0, 1).toUpperCase();
@@ -59,9 +59,9 @@ public class CoursAdapter extends RecyclerView.Adapter<CoursAdapter.CoursViewHol
             holder.tvSession.setText("");
         }
 
-        // Affiche l'enseignant et le code du cours sur la troisième ligne
-        String details = (cours.getEnseignant() != null ? cours.getEnseignant() : "Enseignant inconnu")
-                + (cours.getCodeCours() != null ? " - " + cours.getCodeCours() : "");
+        // Enseignant + code
+        String details = (cours.getTeacher() != null ? cours.getTeacher() : "Enseignant inconnu")
+                + (cours.getCode() != null ? " - " + cours.getCode() : "");
         holder.tvEnseignantEtCode.setText(details);
 
         holder.itemView.setOnClickListener(v -> {

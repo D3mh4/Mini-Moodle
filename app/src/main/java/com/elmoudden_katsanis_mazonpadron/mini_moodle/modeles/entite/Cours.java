@@ -1,78 +1,41 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Cours {
     private String id;
-    private String codeCours;
-    private String titre;
+    private String code;
+    private String title;
     private String description;
-    private String enseignant;
+    private String teacher;
     private String session;
-    private String urlImage;
+    private String imageUrl;
     private List<String> annonces;
 
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
 
-    public String getCodeCours() {
-        return codeCours;
-    }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setCodeCours(String codeCours) {
-        this.codeCours = codeCours;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getTitre() {
-        return titre;
-    }
+    public String getTeacher() { return teacher; }
+    public void setTeacher(String teacher) { this.teacher = teacher; }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
+    public String getSession() { return session; }
+    public void setSession(String session) { this.session = session; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getEnseignant() {
-        return enseignant;
-    }
-
-    public void setEnseignant(String enseignant) {
-        this.enseignant = enseignant;
-    }
-
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
-    }
-
-    public String getUrlImage() {
-        return urlImage;
-    }
-
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
-    }
-
-    public List<String> getAnnonces() {
-        return annonces;
-    }
-
-    public void setAnnonces(List<String> annonces) {
-        this.annonces = annonces;
-    }
+    public List<String> getAnnonces() { return annonces; }
+    public void setAnnonces(List<String> annonces) { this.annonces = annonces; }
 }

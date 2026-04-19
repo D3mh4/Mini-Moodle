@@ -1,7 +1,5 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite;
 
-import android.net.Uri;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -20,7 +18,8 @@ import java.util.List;
         "photoUrl",
         "enrolledCourseIds",
         "quizResults",
-        "completedAssignmentIds"
+        "completedAssignmentIds",
+        "userAnnonces"
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
@@ -38,9 +37,11 @@ public class User {
     private List<ResultatQuiz> quizResults = new ArrayList<>();
     private List<String> completedAssignmentIds = new ArrayList<>();
 
+    // Annonces personnelles (par utilisateur), ex: "Travail [title] soumis"
+    private List<Annonce> userAnnonces = new ArrayList<>();
+
     public User() {}
 
-    // Getters et Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -73,4 +74,7 @@ public class User {
 
     public List<String> getCompletedAssignmentIds() { return completedAssignmentIds; }
     public void setCompletedAssignmentIds(List<String> completedAssignmentIds) { this.completedAssignmentIds = completedAssignmentIds; }
+
+    public List<Annonce> getUserAnnonces() { return userAnnonces; }
+    public void setUserAnnonces(List<Annonce> userAnnonces) { this.userAnnonces = userAnnonces; }
 }

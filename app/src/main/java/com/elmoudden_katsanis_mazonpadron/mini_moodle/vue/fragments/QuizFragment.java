@@ -1,11 +1,12 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.content.Intent;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -15,13 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelCours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelQuiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.QuizActivity;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.QuizAdapter;
-
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,7 @@ public class QuizFragment extends Fragment {
     private ActivityResultLauncher<Intent> quizLauncher;
     private ViewModelQuiz viewModel;
     private ViewModelUser viewModelUser;
+    private ViewModelCours viewModelCours;
 
     public QuizFragment() {
     }
@@ -54,6 +55,7 @@ public class QuizFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(ViewModelQuiz.class);
         viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
+        viewModelCours = new ViewModelProvider(requireActivity()).get(ViewModelCours.class);
 
         quizLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -63,8 +65,6 @@ public class QuizFragment extends Fragment {
                             int score = data.getIntExtra("score", 0);
                             Toast.makeText(getContext(), "Score: " + score, Toast.LENGTH_SHORT).show();
                         }
-                        // Recharge l'utilisateur → l'observer ci-dessous met à jour
-                        // le statut "Terminé" et le score affichés dans l'adaptateur
                         viewModelUser.rechargerUserActuel();
                     }
                 }
@@ -84,15 +84,22 @@ public class QuizFragment extends Fragment {
             }
         });
 
-        // Observer sur l'utilisateur : pousse ses quizResults dans l'adaptateur
-        // pour que le statut et le score s'affichent correctement
+        // Filtrer les quiz par cours inscrits — recharger quand l'utilisateur change
         viewModelUser.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null && adapter != null) {
+            if (user != null) {
                 adapter.setUserResults(user.getQuizResults());
+                if (user.getEnrolledCourseIds() != null) {
+                    viewModel.chargerQuizzesInscrits(user.getEnrolledCourseIds());
+                }
             }
         });
 
-        viewModel.chargerQuizzes();
+        // Fournir les cours pour que l'adaptateur puisse afficher le code (TCH...)
+        viewModelCours.getEnrolledCourses().observe(getViewLifecycleOwner(), courses -> {
+            if (courses != null) {
+                adapter.setCoursesForCodeLookup(courses);
+            }
+        });
 
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Quiz quiz = lesQuizzes.get(position);

@@ -1,5 +1,7 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao;
 
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Annonce;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.User;
 
 import org.json.JSONException;
@@ -24,7 +26,12 @@ public class UserDao {
     public static boolean updateCompletedAssignments(String userId, List<String> completedIds) throws IOException, JSONException {
         return new HttpJsonService().updateCompletedAssignments(userId, completedIds);
     }
-    public static boolean updateQuizResults(String userId, List<com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz> results) throws IOException, JSONException {
+
+    public static boolean updateQuizResults(String userId, List<ResultatQuiz> results) throws IOException, JSONException {
         return new HttpJsonService().updateQuizResults(userId, results);
+    }
+
+    public static boolean updateUserAnnonces(String userId, List<Annonce> annonces) throws IOException, JSONException {
+        return new HttpJsonService().updateUserAnnonces(userId, annonces);
     }
 }

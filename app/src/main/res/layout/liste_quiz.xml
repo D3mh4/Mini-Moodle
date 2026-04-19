@@ -71,6 +71,14 @@
                 android:textColor="@color/orange"
                 android:visibility="gone" />
 
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_media_play"
+                app:tint="@color/gray"
+                android:contentDescription="Ouvrir" />
+
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

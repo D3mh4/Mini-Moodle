@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao.UserDao;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Annonce;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Question;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
@@ -27,7 +28,6 @@ public class QuizActivity extends AppCompatActivity {
 
     private TextView tvTitreQuiz, tvQuestion;
     private RadioGroup radioGroup;
-    private RadioButton selected;
 
     private Button btnValider;
 
@@ -36,7 +36,6 @@ public class QuizActivity extends AppCompatActivity {
 
     private int indexQuestion = 0;
     private int score = 0;
-    private String reponse;
 
     private String userId;
 
@@ -53,11 +52,10 @@ public class QuizActivity extends AppCompatActivity {
         btnValider = findViewById(R.id.btnValider);
 
         quiz = (Quiz) getIntent().getSerializableExtra("quiz");
-        // ID de l'utilisateur connecté, passé par le fragment qui lance le quiz
         userId = getIntent().getStringExtra("userId");
 
         if (quiz != null) {
-            tvTitreQuiz.setText(quiz.getTitre());
+            tvTitreQuiz.setText(quiz.getTitle());
             questions = quiz.getQuestions();
         }
 
@@ -70,7 +68,6 @@ public class QuizActivity extends AppCompatActivity {
         afficherQuestion();
 
         btnValider.setOnClickListener(v -> {
-
             int selectedId = radioGroup.getCheckedRadioButtonId();
 
             if (selectedId == -1) {
@@ -78,10 +75,14 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
 
-            selected = findViewById(selectedId);
-            reponse = selected.getText().toString();
+            // Déterminer l'index de la réponse sélectionnée (0, 1 ou 2)
+            int selectedIndex = -1;
+            if (selectedId == R.id.rb1) selectedIndex = 0;
+            else if (selectedId == R.id.rb2) selectedIndex = 1;
+            else if (selectedId == R.id.rb3) selectedIndex = 2;
 
-            if (reponse.equals(questions.get(indexQuestion).getCorrectAnswer())) {
+            Question current = questions.get(indexQuestion);
+            if (selectedIndex == current.getCorrectOption()) {
                 score++;
             }
 
@@ -99,15 +100,14 @@ public class QuizActivity extends AppCompatActivity {
         radioGroup.clearCheck();
 
         Question q = questions.get(indexQuestion);
-        tvQuestion.setText(q.getStatement());
+        tvQuestion.setText(q.getQuestion());
 
-        String[] options = q.getChoices();
+        String[] options = q.getOptions();
         RadioButton rb1 = findViewById(R.id.rb1);
         RadioButton rb2 = findViewById(R.id.rb2);
         RadioButton rb3 = findViewById(R.id.rb3);
 
-        // Affiche seulement le nombre de boutons correspondant aux choix disponibles
-        // (vrai/faux = 2 choix, QCM = 3 choix)
+        // Affiche seulement le nombre de boutons nécessaires selon les options disponibles
         if (options != null && options.length >= 1) {
             rb1.setText(options[0]);
             rb1.setVisibility(View.VISIBLE);
@@ -134,15 +134,11 @@ public class QuizActivity extends AppCompatActivity {
         Toast.makeText(this, "Score: " + score + "/" + questions.size(),
                 Toast.LENGTH_LONG).show();
 
-        // Désactive le bouton pour éviter un double-clic pendant la sauvegarde
         btnValider.setEnabled(false);
 
-        // Sauvegarde persistante du résultat AVANT de rendre le contrôle au fragment.
-        // On attend que le PATCH soit terminé pour que rechargerUserActuel() dans le
-        // fragment appelant voie les données à jour dès le premier retour.
         if (userId != null && quiz != null && quiz.getId() != null) {
             executorService.execute(() -> {
-                sauvegarderResultatSync();
+                sauvegarderResultatEtAnnonceSync();
                 runOnUiThread(this::terminerAvecResultat);
             });
         } else {
@@ -150,35 +146,31 @@ public class QuizActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Termine l'activité en renvoyant le score au fragment appelant.
-     * Doit être appelé sur le thread UI.
-     */
     private void terminerAvecResultat() {
         Intent intent = new Intent();
         intent.putExtra("score", score);
         intent.putExtra("total", questions.size());
         intent.putExtra("quizId", quiz != null ? quiz.getId() : null);
-
         setResult(RESULT_OK, intent);
-
         finish();
     }
 
     /**
-     * Sauvegarde synchrone du résultat (bloquante, doit être appelée depuis
-     * un thread secondaire). Récupère les quizResults frais du serveur,
-     * ajoute/remplace le résultat pour ce quiz, puis PATCH.
-     * Bloque jusqu'à ce que le PATCH soit terminé.
+     * Sauvegarde synchrone du résultat ET de l'annonce personnelle.
+     * Bloque jusqu'à ce que les PATCH soient terminés.
      */
-    private void sauvegarderResultatSync() {
+    private void sauvegarderResultatEtAnnonceSync() {
         final int finalScore = score;
         final int finalTotal = questions.size();
         final String finalQuizId = quiz.getId();
+        final String quizTitle = quiz.getTitle();
+        final String courseId = quiz.getCourseId();
 
         try {
+            // Récupérer l'utilisateur frais pour ne pas écraser les listes
             List<User> users = UserDao.getUsers();
             List<ResultatQuiz> results = new ArrayList<>();
+            List<Annonce> annonces = new ArrayList<>();
 
             if (users != null) {
                 for (User u : users) {
@@ -186,12 +178,15 @@ public class QuizActivity extends AppCompatActivity {
                         if (u.getQuizResults() != null) {
                             results = new ArrayList<>(u.getQuizResults());
                         }
+                        if (u.getUserAnnonces() != null) {
+                            annonces = new ArrayList<>(u.getUserAnnonces());
+                        }
                         break;
                     }
                 }
             }
 
-            // Retire l'ancien résultat pour ce quiz (si présent), garde le plus récent
+            // Enlever l'ancien résultat pour ce quiz (si déjà présent)
             results.removeIf(r -> finalQuizId.equals(r.getQuizId()));
 
             ResultatQuiz nouveau = new ResultatQuiz();
@@ -200,7 +195,12 @@ public class QuizActivity extends AppCompatActivity {
             nouveau.setTotal(finalTotal);
             results.add(nouveau);
 
+            // Ajout de l'annonce en tête
+            String text = (quizTitle != null ? quizTitle : "") + " complété";
+            annonces.add(0, new Annonce(courseId, text));
+
             UserDao.updateQuizResults(userId, results);
+            UserDao.updateUserAnnonces(userId, annonces);
         } catch (Exception e) {
             e.printStackTrace();
         }

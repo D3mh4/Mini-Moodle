@@ -14,6 +14,7 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.User;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -79,9 +80,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             newUser.setTelephone("");
             newUser.setPhotoUrl("");
 
-            // Auto-inscription à tous les cours disponibles
-            // Les IDs correspondent aux cours dans moodle.json
-            newUser.setEnrolledCourseIds(Arrays.asList("1", "2", "3"));
+            // Auto-inscription à tous les cours disponibles (1 à 6)
+            newUser.setEnrolledCourseIds(Arrays.asList("1", "2", "3", "4", "5", "6"));
+            newUser.setUserAnnonces(new ArrayList<>());
 
             viewModel.inscrireUser(newUser);
         }

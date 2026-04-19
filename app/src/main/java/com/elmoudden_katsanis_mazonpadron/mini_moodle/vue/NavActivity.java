@@ -18,11 +18,15 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelAssignm
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelCours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.databinding.NavActivityBinding;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Annonce;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Cours;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.User;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NavActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,17 +53,14 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
         logout = findViewById(R.id.img_logout);
         logout.setOnClickListener(this);
 
-        // Configuration du bouton de notifications (icône cloche)
         notifications = findViewById(R.id.imageView4);
         notifications.setOnClickListener(this);
 
         viewModel.chargerUserParId(userId);
 
-        // Quand l'utilisateur est chargé, on charge ses cours inscrits
-        // pour que les notifications soient disponibles à tout moment
         viewModel.getUser().observe(this, user -> {
             if (user != null) {
-                viewModelAssignment.setCurrentUser(user);  // ← add this line
+                viewModelAssignment.setCurrentUser(user);
                 if (user.getEnrolledCourseIds() != null) {
                     viewModelCours.chargerCoursInscrits(user.getEnrolledCourseIds());
                 }
@@ -69,7 +70,6 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
         replaceFragment(new DashboardFragment());
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-
             Fragment fragment = null;
             int itemId = item.getItemId();
 
@@ -115,29 +115,47 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     /**
-     * Collecte les annonces de tous les cours inscrits et les affiche
-     * dans un AlertDialog (popup).
-     *
-     * Récupère les cours depuis le ViewModelCours (déjà chargés),
-     * parcourt chaque cours pour extraire ses annonces,
-     * et les affiche sous forme de liste dans un dialog.
+     * Affiche un popup avec toutes les notifications de l'utilisateur :
+     *  1. Ses annonces personnelles (travaux soumis, quiz complétés) en premier
+     *  2. Les annonces globales de chacun de ses cours inscrits
      */
     private void afficherNotifications() {
         List<Cours> courses = viewModelCours.getEnrolledCourses().getValue();
+        User user = viewModel.getUser().getValue();
 
         if (courses == null || courses.isEmpty()) {
             Toast.makeText(this, "Aucune notification", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Collecte toutes les annonces avec le nom du cours en préfixe
+        // Lookup courseId → code pour préfixer chaque annonce
+        Map<String, String> courseIdToCode = new HashMap<>();
+        for (Cours c : courses) {
+            if (c.getId() != null) {
+                courseIdToCode.put(c.getId(), c.getCode() != null ? c.getCode() : "");
+            }
+        }
+
         List<String> toutesLesAnnonces = new ArrayList<>();
 
+        // Annonces personnelles en tête (plus récentes)
+        if (user != null && user.getUserAnnonces() != null) {
+            for (Annonce a : user.getUserAnnonces()) {
+                if (a != null && a.getText() != null) {
+                    String code = a.getCourseId() != null ? courseIdToCode.get(a.getCourseId()) : null;
+                    String prefix = code != null ? code : "";
+                    toutesLesAnnonces.add(prefix + " — " + a.getText());
+                }
+            }
+        }
+
+        // Annonces globales ensuite
         for (Cours cours : courses) {
             List<String> annonces = cours.getAnnonces();
             if (annonces != null) {
                 for (String annonce : annonces) {
-                    toutesLesAnnonces.add(cours.getCodeCours() + " — " + annonce);
+                    String prefix = cours.getCode() != null ? cours.getCode() : "";
+                    toutesLesAnnonces.add(prefix + " — " + annonce);
                 }
             }
         }
@@ -147,10 +165,8 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
-        // Convertit la List<String> en String[] pour le AlertDialog
         String[] items = toutesLesAnnonces.toArray(new String[0]);
 
-        // Construit et affiche le dialog
         new AlertDialog.Builder(this)
                 .setTitle("Notifications")
                 .setItems(items, null)

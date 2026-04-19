@@ -2,63 +2,75 @@
   "users": [
     {
       "id": "1",
-      "username": "alice",
-      "email": "alice@ets.ca",
-      "password": "pass123",
-      "nom": "Tremblay",
-      "prenom": "Alice",
-      "telephone": "514-555-0001",
-      "photoUrl": "",
+      "username": "Sara",
+      "email": "sara@etsmtl.ca",
+      "password": "111",
+      "nom": "Ouni",
+      "prenom": "Sara",
+      "telephone": "514-123-4567",
+      "photoUrl": "https://example.com/photo1.jpg",
       "enrolledCourseIds": [
-        "1",
-        "2",
-        "3"
+        "1"
       ],
       "quizResults": [
         {
-          "quizId": "3",
-          "score": 0,
-          "total": 2
+          "quizId": "1",
+          "score": 1,
+          "total": 1
         },
         {
           "quizId": "2",
-          "score": 2,
-          "total": 3
+          "score": 1,
+          "total": 1
         }
       ],
-      "completedAssignmentIds": []
+      "completedAssignmentIds": [],
+      "userAnnonces": [
+        {
+          "courseId": "1",
+          "text": "Quiz Quiz 2 complété"
+        }
+      ]
     },
     {
       "id": "2",
-      "username": "bob",
-      "email": "bob@ets.ca",
-      "password": "pass123",
-      "nom": "Gagnon",
-      "prenom": "Bob",
-      "telephone": "514-555-0002",
+      "username": "Mylene",
+      "email": "mylene@ens.etsmtl.ca",
+      "password": "password456",
+      "nom": "DesJardins",
+      "prenom": "Mylene",
+      "telephone": "514-987-6543",
       "photoUrl": "",
       "enrolledCourseIds": [
-        "1",
         "2",
-        "3"
+        "3",
+        "4",
+        "5",
+        "6"
       ],
       "quizResults": [
         {
-          "quizId": "3",
+          "quizId": "12",
           "score": 0,
-          "total": 2
+          "total": 1
         }
       ],
-      "completedAssignmentIds": []
+      "completedAssignmentIds": [],
+      "userAnnonces": [
+        {
+          "courseId": "6",
+          "text": "Quiz 2 complété"
+        }
+      ]
     },
     {
-      "id": "3",
-      "username": "claire",
-      "email": "claire@ets.ca",
-      "password": "pass123",
-      "nom": "Roy",
-      "prenom": "Claire",
-      "telephone": "514-555-0003",
+      "id": "d66f",
+      "username": "lee",
+      "email": "ming@etsmtl.ca",
+      "password": "lazharets26",
+      "nom": "lee",
+      "prenom": "ming",
+      "telephone": "514-000-0000",
       "photoUrl": "",
       "enrolledCourseIds": [
         "1",
@@ -66,48 +78,287 @@
         "3"
       ],
       "quizResults": [],
-      "completedAssignmentIds": []
+      "completedAssignmentIds": [],
+      "userAnnonces": []
     }
   ],
   "courses": [
     {
       "id": "1",
-      "codeCours": "TCH055",
-      "titre": "Base de données",
-      "description": "Introduction aux bases de données relationnelles, SQL, modélisation et normalisation. Ce cours couvre les principes fondamentaux des systèmes de gestion de bases de données.",
-      "enseignant": "Samah Kansab",
-      "session": "H2026",
-      "urlImage": "",
+      "code": "TCH017",
+      "title": "Architecture des ordinateurs",
+      "description": "Ce cours vise à initier l'étudiante ou l'étudiant au rôle des différentes composantes matérielles d'un ordinateur.",
+      "teacher": "Lazhar Khelifi",
+      "session": "Hiver 2026",
+      "imageUrl": "https://example.com/arch.png",
       "annonces": [
-        "Rappel : Le laboratoire noté #4 est à remettre le 15 avril.",
-        "Les notes du quiz #3 sont disponibles.",
-        "Séance de révision le vendredi 11 avril à 14h."
+        "L'examen intra aura lieu le 15 mars en salle A-1234."
       ]
     },
     {
       "id": "2",
-      "codeCours": "TCH056",
-      "titre": "Développement web",
-      "description": "Développement d'applications web modernes avec HTML, CSS, JavaScript et frameworks. Introduction aux architectures client-serveur et aux API REST.",
-      "enseignant": "Lazhar Khelifi",
-      "session": "H2026",
-      "urlImage": "",
+      "code": "TCH055",
+      "title": "Bases de données",
+      "description": "Au terme de ce cours, l'étudiante ou l'étudiant sera en mesure de décrire les principales composantes d'un SGBD.",
+      "teacher": "Marie Tremblay",
+      "session": "Hiver 2026",
+      "imageUrl": "https://example.com/db.png",
       "annonces": [
-        "Le projet final est maintenant disponible sur ENA.",
-        "N'oubliez pas de former vos équipes avant le 21 mars."
+        "Le nouveau TP sur la modélisation est disponible sur Moodle."
       ]
     },
     {
       "id": "3",
-      "codeCours": "TCH057",
-      "titre": "Développement mobile",
-      "description": "Conception et développement d'applications mobiles Android en Java. Principes d'ergonomie et d'expérience utilisateur (UX). Architecture MVVM, RecyclerView, API REST.",
-      "enseignant": "Lazhar Khelifi",
-      "session": "H2026",
-      "urlImage": "",
+      "code": "TCH057",
+      "title": "Applications mobiles et expérience usager",
+      "description": "Développement d'applications mobiles.",
+      "teacher": "Pierre Durand",
+      "session": "Hiver 2026",
+      "imageUrl": "https://example.com/mobile.png",
       "annonces": [
-        "Le projet Mini Moodle est à remettre le 19 avril.",
-        "Quiz du cours #10 est maintenant disponible."
+        "Installation d'Android Studio requise."
+      ]
+    },
+    {
+      "id": "4",
+      "code": "TCH056",
+      "title": "Programmation Web",
+      "description": "Rudiments de la programmation Web.",
+      "teacher": "Sophie Roy",
+      "session": "Hiver 2026",
+      "imageUrl": "https://example.com/web.png",
+      "annonces": [
+        "Quiz HTML/CSS vendredi."
+      ]
+    },
+    {
+      "id": "5",
+      "code": "TCH016",
+      "title": "Système d'exploitation",
+      "description": "Fonctionnement système et services Internet.",
+      "teacher": "Luc Lefebvre",
+      "session": "Hiver 2026",
+      "imageUrl": "https://example.com/os.png",
+      "annonces": [
+        "Mise à jour des serveurs terminée."
+      ]
+    },
+    {
+      "id": "6",
+      "code": "TCH013",
+      "title": "Automates programmables",
+      "description": "Programmation GRAFCET et séquences.",
+      "teacher": "Julie Gagnon",
+      "session": "Hiver 2026",
+      "imageUrl": "https://example.com/plc.png",
+      "annonces": [
+        "Séance de labo mardi soir."
+      ]
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "1",
+      "courseId": "1",
+      "title": "Quiz 1",
+      "questions": [
+        {
+          "id": "1",
+          "question": "Qu'est-ce qu'un CPU ?",
+          "options": [
+            "Traitement",
+            "Mémoire",
+            "Écran"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "courseId": "1",
+      "title": "Quiz 2",
+      "questions": [
+        {
+          "id": "5",
+          "question": "ROM signifie ?",
+          "options": [
+            "Read-Only Memory",
+            "Random",
+            "Rapid"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "courseId": "2",
+      "title": "Quiz 1",
+      "questions": [
+        {
+          "id": "9",
+          "question": "SGBD signifie ?",
+          "options": [
+            "Base de Données",
+            "Générique",
+            "Gestion"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "courseId": "2",
+      "title": "Quiz 2",
+      "questions": [
+        {
+          "id": "13",
+          "question": "CRUD signifie ?",
+          "options": [
+            "Create, Read, Update, Delete",
+            "Copy",
+            "Compute"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "courseId": "3",
+      "title": "Quiz 1",
+      "questions": [
+        {
+          "id": "17",
+          "question": "Android Studio est un ?",
+          "options": [
+            "IDE",
+            "SGBD",
+            "OS"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "courseId": "3",
+      "title": "Quiz 2",
+      "questions": [
+        {
+          "id": "21",
+          "question": "RecyclerView sert à ?",
+          "options": [
+            "Listes",
+            "Fichiers",
+            "Réseau"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "courseId": "4",
+      "title": "Quiz 1",
+      "questions": [
+        {
+          "id": "25",
+          "question": "HTML signifie ?",
+          "options": [
+            "Markup Language",
+            "Transfer",
+            "HighText"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "courseId": "4",
+      "title": "Quiz 2",
+      "questions": [
+        {
+          "id": "29",
+          "question": "Quel attribut change la couleur ?",
+          "options": [
+            "color",
+            "font",
+            "background"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "courseId": "5",
+      "title": "Quiz 1",
+      "questions": [
+        {
+          "id": "33",
+          "question": "Quel système gère le matériel ?",
+          "options": [
+            "OS",
+            "SGBD",
+            "IDE"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "courseId": "5",
+      "title": "Quiz 2",
+      "questions": [
+        {
+          "id": "37",
+          "question": "Multitâche permet ?",
+          "options": [
+            "Plusieurs programmes",
+            "Imprimer",
+            "Fichiers"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "courseId": "6",
+      "title": "Quiz 1",
+      "questions": [
+        {
+          "id": "41",
+          "question": "GRAFCET sert à ?",
+          "options": [
+            "Séquences",
+            "Données",
+            "Interface"
+          ],
+          "correctOption": 0
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "courseId": "6",
+      "title": "Quiz 2",
+      "questions": [
+        {
+          "id": "45",
+          "question": "Automate est pour ?",
+          "options": [
+            "Contrôler machines",
+            "Stocker",
+            "SQL"
+          ],
+          "correctOption": 0
+        }
       ]
     }
   ],
@@ -115,179 +366,158 @@
     {
       "id": "1",
       "courseId": "1",
-      "title": "Laboratoire noté #4",
-      "description": "Création et manipulation d'une base de données relationnelle avec requêtes SQL avancées.",
-      "dueDate": "2026-04-15",
-      "instructions": "Réalisez les exercices du cahier de laboratoire. Soumettez votre fichier SQL et le rapport en PDF.",
-      "status": "À faire",
+      "title": "Devoir 1",
+      "description": "Détails architecture.",
+      "dueDate": "2026-03-20",
+      "instructions": "PDF 5 pages",
+      "status": "Non soumis",
       "grade": null,
       "comment": null,
       "totalPoints": 20,
-      "type": "laboratoire"
+      "type": "text"
     },
     {
       "id": "2",
-      "courseId": "2",
-      "title": "TP #3 - API REST",
-      "description": "Développement d'une API REST avec Node.js et Express.",
-      "dueDate": "2026-04-18",
-      "instructions": "Implémentez les endpoints CRUD pour la gestion des produits. Testez avec Postman.",
-      "status": "À faire",
+      "courseId": "1",
+      "title": "Devoir 2",
+      "description": "Assembleur.",
+      "dueDate": "2026-05-05",
+      "instructions": "Boucle",
+      "status": "Non soumis",
       "grade": null,
       "comment": null,
-      "totalPoints": 25,
-      "type": "tp"
+      "totalPoints": 20,
+      "type": "file"
     },
     {
       "id": "3",
-      "courseId": "1",
-      "title": "Laboratoire noté #3",
-      "description": "Modélisation entité-relation et normalisation.",
-      "dueDate": "2026-03-28",
-      "instructions": "Réalisez le diagramme ER et normalisez jusqu'à la 3NF.",
-      "status": "Corrigé",
-      "grade": 18,
-      "comment": "Bon travail! La normalisation est bien faite. Attention aux cardinalités.",
+      "courseId": "2",
+      "title": "Devoir 1",
+      "description": "Modélisation.",
+      "dueDate": "2026-03-25",
+      "instructions": "ER Diagram",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
       "totalPoints": 20,
-      "type": "laboratoire"
+      "type": "file"
     },
     {
       "id": "4",
-      "courseId": "3",
-      "title": "Projet Mini Moodle",
-      "description": "Développement d'une application mobile Android complète.",
-      "dueDate": "2026-04-19",
-      "instructions": "Développez l'application Mini Moodle selon l'énoncé. Incluez le code source, les maquettes Figma et le rapport.",
-      "status": "À faire",
-      "grade": null,
-      "comment": null,
-      "totalPoints": 40,
-      "type": "projet"
-    },
-    {
-      "id": "5",
       "courseId": "2",
-      "title": "TP #2 - Frontend",
-      "description": "Création d'une interface utilisateur responsive avec CSS Grid et Flexbox.",
-      "dueDate": "2026-04-20",
-      "instructions": "Intégrez la maquette fournie en HTML/CSS responsive.",
-      "status": "À faire",
+      "title": "Devoir 2",
+      "description": "Requêtes.",
+      "dueDate": "2026-05-10",
+      "instructions": "SELECT",
+      "status": "Non soumis",
       "grade": null,
       "comment": null,
       "totalPoints": 20,
-      "type": "tp"
+      "type": "text"
+    },
+    {
+      "id": "5",
+      "courseId": "3",
+      "title": "Devoir 1",
+      "description": "UI Mobile.",
+      "dueDate": "2026-03-30",
+      "instructions": "Activity",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "file"
     },
     {
       "id": "6",
       "courseId": "3",
-      "title": "Laboratoire #2 - RecyclerView",
-      "description": "Implémentation d'un RecyclerView avec adaptateur personnalisé.",
-      "dueDate": "2026-03-15",
-      "instructions": "Créez une application affichant une liste de contacts avec RecyclerView.",
-      "status": "À faire",
+      "title": "Devoir 2",
+      "description": "Navigation.",
+      "dueDate": "2026-05-12",
+      "instructions": "Intents",
+      "status": "Non soumis",
       "grade": null,
       "comment": null,
-      "totalPoints": 15,
-      "type": "laboratoire"
-    }
-  ],
-  "quizzes": [
-    {
-      "id": "1",
-      "idCours": "TCH055",
-      "titre": "Quiz #3 - SQL avancé",
-      "nbrQuestions": 10,
-      "statut": "terminé",
-      "score": 8,
-      "questions": [
-        {
-          "statement": "Quelle commande SQL permet de créer une table ?",
-          "type": "qcm",
-          "choices": [
-            "CREATE TABLE",
-            "MAKE TABLE",
-            "NEW TABLE"
-          ],
-          "correctAnswer": "CREATE TABLE"
-        },
-        {
-          "statement": "JOIN est utilisé pour combiner des tables.",
-          "type": "vrai_faux",
-          "choices": [
-            "Vrai",
-            "Faux"
-          ],
-          "correctAnswer": "Vrai"
-        }
-      ]
+      "totalPoints": 20,
+      "type": "text"
     },
     {
-      "id": "2",
-      "idCours": "TCH057",
-      "titre": "Quiz du cours #10",
-      "nbrQuestions": 8,
-      "statut": "non commencé",
-      "score": 0,
-      "questions": [
-        {
-          "statement": "Quel composant Android affiche une liste recyclable ?",
-          "type": "qcm",
-          "choices": [
-            "ListView",
-            "RecyclerView",
-            "ScrollView"
-          ],
-          "correctAnswer": "RecyclerView"
-        },
-        {
-          "statement": "MVVM signifie Model-View-ViewModel.",
-          "type": "vrai_faux",
-          "choices": [
-            "Vrai",
-            "Faux"
-          ],
-          "correctAnswer": "Vrai"
-        },
-        {
-          "statement": "Quel outil gère les dépendances dans un projet Android ?",
-          "type": "qcm",
-          "choices": [
-            "Maven",
-            "Gradle",
-            "npm"
-          ],
-          "correctAnswer": "Gradle"
-        }
-      ]
+      "id": "7",
+      "courseId": "4",
+      "title": "Devoir 1",
+      "description": "HTML.",
+      "dueDate": "2026-03-22",
+      "instructions": "Lien",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "file"
     },
     {
-      "id": "3",
-      "idCours": "TCH056",
-      "titre": "Quiz #5 - JavaScript",
-      "nbrQuestions": 12,
-      "statut": "non commencé",
-      "score": 0,
-      "questions": [
-        {
-          "statement": "JavaScript est un langage typé statiquement.",
-          "type": "vrai_faux",
-          "choices": [
-            "Vrai",
-            "Faux"
-          ],
-          "correctAnswer": "Faux"
-        },
-        {
-          "statement": "Quelle méthode ajoute un élément à la fin d'un tableau ?",
-          "type": "qcm",
-          "choices": [
-            "push()",
-            "pop()",
-            "shift()"
-          ],
-          "correctAnswer": "push()"
-        }
-      ]
+      "id": "8",
+      "courseId": "4",
+      "title": "Devoir 2",
+      "description": "CSS.",
+      "dueDate": "2026-05-07",
+      "instructions": "Style",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "text"
+    },
+    {
+      "id": "9",
+      "courseId": "5",
+      "title": "Devoir 1",
+      "description": "OS Study.",
+      "dueDate": "2026-03-24",
+      "instructions": "Report",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "text"
+    },
+    {
+      "id": "10",
+      "courseId": "5",
+      "title": "Devoir 2",
+      "description": "Installation.",
+      "dueDate": "2026-05-09",
+      "instructions": "Notes",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "file"
+    },
+    {
+      "id": "11",
+      "courseId": "6",
+      "title": "Devoir 1",
+      "description": "Karnaugh.",
+      "dueDate": "2026-03-24",
+      "instructions": "Logic",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "text"
+    },
+    {
+      "id": "12",
+      "courseId": "6",
+      "title": "Devoir 2",
+      "description": "PLC Code.",
+      "dueDate": "2026-05-12",
+      "instructions": "Sequence",
+      "status": "Non soumis",
+      "grade": null,
+      "comment": null,
+      "totalPoints": 20,
+      "type": "file"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

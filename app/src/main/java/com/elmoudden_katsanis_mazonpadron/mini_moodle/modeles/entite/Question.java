@@ -1,52 +1,44 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Question implements Serializable {
-    private String statement;
-    private String type;
-    private String[] choices;
-    private String correctAnswer;
+    private String id;
+    private String question;
+    private String[] options;
+    private int correctOption;
 
     public Question() {
     }
 
-    public Question(String statement, String type, String[] choices, String correctAnswer) {
-        this.statement = statement;
-        this.type = type;
-        this.choices = choices;
-        this.correctAnswer = correctAnswer;
+    public Question(String question, String[] options, int correctOption) {
+        this.question = question;
+        this.options = options;
+        this.correctOption = correctOption;
     }
 
-    public String getStatement() {
-        return statement;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setStatement(String statement) {
-        this.statement = statement;
-    }
+    public String getQuestion() { return question; }
+    public void setQuestion(String question) { this.question = question; }
 
-    public String getType() {
-        return type;
-    }
+    public String[] getOptions() { return options; }
+    public void setOptions(String[] options) { this.options = options; }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    public int getCorrectOption() { return correctOption; }
+    public void setCorrectOption(int correctOption) { this.correctOption = correctOption; }
 
-    public String[] getChoices() {
-        return choices;
-    }
-
-    public void setChoices(String[] choices) {
-        this.choices = choices;
-    }
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
+    /**
+     * Aide : renvoie le texte de la bonne réponse à partir de l'index.
+     */
+    public String getCorrectAnswerText() {
+        if (options != null && correctOption >= 0 && correctOption < options.length) {
+            return options[correctOption];
+        }
+        return null;
     }
 }

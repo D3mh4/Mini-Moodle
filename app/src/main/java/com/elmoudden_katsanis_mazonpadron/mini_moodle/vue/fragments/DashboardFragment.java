@@ -19,6 +19,7 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelCours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao.QuizDao;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Assignment;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Cours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,13 +34,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Fragment du Tableau de Bord (Dashboard).
- *
- * Les quiz disponibles montrent ceux que l'utilisateur n'a PAS encore complétés
- * (basé sur quizResults). Cliquer un quiz ici amène l'utilisateur à l'onglet
- * Quiz où il pourra le démarrer (pas de lancement direct depuis le dashboard).
- */
 public class DashboardFragment extends Fragment {
 
     private ViewModelUser viewModelUser;
@@ -52,7 +46,6 @@ public class DashboardFragment extends Fragment {
 
     private TextView tvCountAFaire, tvCountRemis, tvCountRetard, tvCountCorrige;
 
-    // Cache de tous les quiz, pour re-filtrer localement quand quizResults change
     private List<Quiz> cacheTousLesQuizzes = new ArrayList<>();
 
     public DashboardFragment() {
@@ -100,8 +93,6 @@ public class DashboardFragment extends Fragment {
 
         RecyclerView rvQuiz = view.findViewById(R.id.rvQuizDisponibles);
         rvQuiz.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Au clic sur un quiz du dashboard : on ne lance plus le quiz directement,
-        // on amène l'utilisateur à l'onglet Quiz via la BottomNavigationView.
         quizAdapter = new DashboardQuizAdapter(quiz -> naviguerVersOngletQuiz());
         rvQuiz.setAdapter(quizAdapter);
 
@@ -111,6 +102,8 @@ public class DashboardFragment extends Fragment {
             List<String> enrolledIds = user.getEnrolledCourseIds();
             if (enrolledIds != null && !enrolledIds.isEmpty()) {
                 viewModelCours.chargerCoursInscrits(enrolledIds);
+                // ViewModelAssignment filtrera tout seul via currentUser.enrolledCourseIds
+                viewModelAssignment.setCurrentUser(user);
                 viewModelAssignment.chargerTousLesAssignments();
             }
 
@@ -130,11 +123,22 @@ public class DashboardFragment extends Fragment {
             } else {
                 rafraichirQuizzesDisponibles();
             }
+
+            // Mettre à jour les scores déjà complétés
+            if (quizAdapter != null) {
+                quizAdapter.setUserResults(user.getQuizResults());
+            }
         });
 
         viewModelCours.getEnrolledCourses().observe(getViewLifecycleOwner(), courses -> {
             if (courses != null) {
                 coursAdapter.setCoursList(courses);
+                // Alimenter le lookup courseId → code pour l'adaptateur quiz
+                if (quizAdapter != null) {
+                    quizAdapter.setCoursesForCodeLookup(courses);
+                }
+                // Ré-appliquer le filtre quiz maintenant qu'on a les cours
+                rafraichirQuizzesDisponibles();
             }
         });
 
@@ -143,30 +147,30 @@ public class DashboardFragment extends Fragment {
                 mettreAJourCompteurs(assignments);
 
                 List<Assignment> upcoming = new ArrayList<>();
-                List<String> enrolledIds = null;
-                if (viewModelUser.getUser().getValue() != null) {
-                    enrolledIds = viewModelUser.getUser().getValue().getEnrolledCourseIds();
-                }
-
-                if (enrolledIds != null) {
-                    for (Assignment a : assignments) {
-                        if (enrolledIds.contains(a.getCourseId())
-                                && a.getStatus() != null
-                                && a.getStatus().equalsIgnoreCase("à faire")) {
-                            upcoming.add(a);
-                        }
+                for (Assignment a : assignments) {
+                    if (a.getStatus() != null
+                            && (a.getStatus().equalsIgnoreCase("à faire")
+                                || a.getStatus().equalsIgnoreCase("non soumis"))) {
+                        upcoming.add(a);
                     }
                 }
+                android.util.Log.d("DASH", "assignments received: " + assignments.size() + ", upcoming after filter: " + upcoming.size());
+                for (Assignment a : upcoming) {
+                    android.util.Log.d("DASH", "  upcoming: " + a.getTitle() + " [" + a.getStatus() + "]");
+                }
                 assignmentAdapter.setAssignmentList(upcoming);
+                View rv = getView() != null ? getView().findViewById(R.id.rvTravauxProchains) : null;
+                if (rv != null) {
+                    float density = getResources().getDisplayMetrics().density;
+                    int heightPx = (int) (100 * density * upcoming.size());
+                    ViewGroup.LayoutParams lp = rv.getLayoutParams();
+                    lp.height = heightPx;
+                    rv.setLayoutParams(lp);
+                }
             }
         });
     }
 
-    /**
-     * Bascule l'onglet actif de la BottomNavigationView vers "Quiz".
-     * setSelectedItemId déclenche le listener de NavActivity qui fait
-     * déjà le replaceFragment vers QuizFragment.
-     */
     private void naviguerVersOngletQuiz() {
         if (getActivity() == null) return;
         BottomNavigationView nav = requireActivity().findViewById(R.id.bottomNavigationView);
@@ -176,26 +180,33 @@ public class DashboardFragment extends Fragment {
     }
 
     /**
-     * Retire de la liste les quiz déjà complétés par l'utilisateur.
+     * Retire de la liste :
+     *  - les quiz des cours non inscrits
+     *  - les quiz déjà complétés par l'utilisateur
      */
     private void rafraichirQuizzesDisponibles() {
         if (quizAdapter == null) return;
 
         Set<String> doneIds = new HashSet<>();
-        if (viewModelUser.getUser().getValue() != null
-                && viewModelUser.getUser().getValue().getQuizResults() != null) {
-            for (ResultatQuiz r : viewModelUser.getUser().getValue().getQuizResults()) {
-                if (r.getQuizId() != null) {
-                    doneIds.add(r.getQuizId());
+        List<String> enrolledIds = null;
+
+        if (viewModelUser.getUser().getValue() != null) {
+            if (viewModelUser.getUser().getValue().getQuizResults() != null) {
+                for (ResultatQuiz r : viewModelUser.getUser().getValue().getQuizResults()) {
+                    if (r.getQuizId() != null) {
+                        doneIds.add(r.getQuizId());
+                    }
                 }
             }
+            enrolledIds = viewModelUser.getUser().getValue().getEnrolledCourseIds();
         }
 
         List<Quiz> disponibles = new ArrayList<>();
         for (Quiz q : cacheTousLesQuizzes) {
-            if (q.getId() != null && !doneIds.contains(q.getId())) {
-                disponibles.add(q);
-            }
+            if (q.getId() == null) continue;
+            if (doneIds.contains(q.getId())) continue;
+            if (enrolledIds != null && !enrolledIds.contains(q.getCourseId())) continue;
+            disponibles.add(q);
         }
 
         quizAdapter.setQuizList(disponibles);
@@ -209,6 +220,7 @@ public class DashboardFragment extends Fragment {
             if (statut != null) {
                 switch (statut.toLowerCase()) {
                     case "à faire":
+                    case "non soumis":
                         aFaire++;
                         break;
                     case "remis":

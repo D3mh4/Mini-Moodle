@@ -11,11 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Cours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QuizAdapter extends ArrayAdapter<Quiz> {
 
@@ -23,9 +26,8 @@ public class QuizAdapter extends ArrayAdapter<Quiz> {
     private int viewResourceId;
     private List<Quiz> lesQuizzes;
 
-    // Résultats de quiz de l'utilisateur connecté, pour afficher le score
-    // et le statut "Terminé" sur les quiz complétés.
     private List<ResultatQuiz> userResults = new ArrayList<>();
+    private Map<String, String> courseIdToCode = new HashMap<>();
 
     public QuizAdapter(@NonNull Context contexte, int viewResourceId, @NonNull List<Quiz> quizzes) {
         super(contexte, viewResourceId, quizzes);
@@ -34,12 +36,20 @@ public class QuizAdapter extends ArrayAdapter<Quiz> {
         this.lesQuizzes = quizzes;
     }
 
-    /**
-     * Fournit les résultats de l'utilisateur pour que l'adaptateur
-     * puisse afficher le statut et le score de chaque quiz.
-     */
     public void setUserResults(List<ResultatQuiz> results) {
         this.userResults = results != null ? results : new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    public void setCoursesForCodeLookup(List<Cours> courses) {
+        courseIdToCode.clear();
+        if (courses != null) {
+            for (Cours c : courses) {
+                if (c.getId() != null) {
+                    courseIdToCode.put(c.getId(), c.getCode() != null ? c.getCode() : "");
+                }
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -65,18 +75,17 @@ public class QuizAdapter extends ArrayAdapter<Quiz> {
         TextView tvStatut = view.findViewById(R.id.tvStatut);
         TextView tvNote = view.findViewById(R.id.tvNoteQuiz);
 
-        tvCoursCode.setText(quiz.getIdCours() != null ? quiz.getIdCours() : "");
-        tvTitre.setText(quiz.getTitre());
+        String code = quiz.getCourseId() != null ? courseIdToCode.get(quiz.getCourseId()) : "";
+        tvCoursCode.setText(code != null ? code : "");
+        tvTitre.setText(quiz.getTitle());
 
         ResultatQuiz userResult = trouverResultat(quiz.getId());
 
         if (userResult != null) {
-            // Quiz complété : score en orange à droite, statut "Terminé"
             tvNote.setText(userResult.getScore() + " / " + userResult.getTotal());
             tvNote.setVisibility(View.VISIBLE);
             tvStatut.setText("Terminé");
         } else {
-            // Quiz non complété
             tvNote.setVisibility(View.GONE);
             tvStatut.setText(quiz.getNbrQuestions() + " questions");
         }

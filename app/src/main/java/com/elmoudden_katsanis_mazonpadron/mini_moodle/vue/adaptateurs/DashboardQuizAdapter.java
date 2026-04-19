@@ -9,20 +9,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Cours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Adaptateur RecyclerView pour afficher les quiz (tableau de bord + détails cours).
- * Affiche le score de l'utilisateur si un résultat est présent dans userResults.
+ * Adaptateur pour l'affichage des quiz (dashboard + détails cours).
+ * Le code cours (ex: "TCH057") est résolu depuis courseIdToCode
+ * car Quiz.courseId ne contient désormais qu'un ID numérique.
  */
 public class DashboardQuizAdapter extends RecyclerView.Adapter<DashboardQuizAdapter.QuizViewHolder> {
 
     private List<Quiz> quizList = new ArrayList<>();
     private List<ResultatQuiz> userResults = new ArrayList<>();
+    private Map<String, String> courseIdToCode = new HashMap<>();
     private OnQuizClickListener listener;
 
     public interface OnQuizClickListener {
@@ -38,12 +43,24 @@ public class DashboardQuizAdapter extends RecyclerView.Adapter<DashboardQuizAdap
         notifyDataSetChanged();
     }
 
-    /**
-     * Fournit les résultats de quiz de l'utilisateur pour afficher
-     * le score sur les items qu'il a déjà complétés.
-     */
     public void setUserResults(List<ResultatQuiz> results) {
         this.userResults = results != null ? results : new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Fournit la liste complète de cours pour pouvoir afficher le code
+     * cours (TCH...) à côté de chaque quiz.
+     */
+    public void setCoursesForCodeLookup(List<Cours> courses) {
+        courseIdToCode.clear();
+        if (courses != null) {
+            for (Cours c : courses) {
+                if (c.getId() != null) {
+                    courseIdToCode.put(c.getId(), c.getCode() != null ? c.getCode() : "");
+                }
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -59,14 +76,13 @@ public class DashboardQuizAdapter extends RecyclerView.Adapter<DashboardQuizAdap
     public void onBindViewHolder(@NonNull QuizViewHolder holder, int position) {
         Quiz quiz = quizList.get(position);
 
-        holder.tvCoursCode.setText(quiz.getIdCours() != null ? quiz.getIdCours() : "");
-        holder.tvTitre.setText(quiz.getTitre());
+        String code = quiz.getCourseId() != null ? courseIdToCode.get(quiz.getCourseId()) : "";
+        holder.tvCoursCode.setText(code != null ? code : "");
+        holder.tvTitre.setText(quiz.getTitle());
 
-        // Cherche un résultat de l'utilisateur pour ce quiz
         ResultatQuiz userResult = trouverResultat(quiz.getId());
 
         if (userResult != null) {
-            // Affiche le score sauvegardé (format similaire aux travaux corrigés)
             holder.tvScore.setText(userResult.getScore() + " / " + userResult.getTotal());
             holder.tvScore.setVisibility(View.VISIBLE);
             holder.tvInfo.setText("Complété");

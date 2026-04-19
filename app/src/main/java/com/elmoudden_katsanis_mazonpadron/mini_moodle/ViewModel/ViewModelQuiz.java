@@ -34,30 +34,58 @@ public class ViewModelQuiz extends ViewModel {
         return error;
     }
 
+    /**
+     * Charge tous les quiz (non filtré par utilisateur).
+     * Peu utilisé — préférer chargerQuizzesInscrits.
+     */
     public void chargerQuizzes() {
         executorService.execute(() -> {
             try {
                 List<Quiz> list = QuizDao.getQuizzes();
-                quizzes.postValue(list);
+                quizzes.postValue(list != null ? list : new ArrayList<>());
             } catch (IOException | JSONException e) {
                 error.postValue("Erreur lors du chargement des quiz : " + e.getMessage());
+                quizzes.postValue(new ArrayList<>());
             }
         });
     }
 
     /**
-     * Charge les quiz appartenant à un cours donné.
-     * Note: Quiz.idCours contient le code du cours (ex: "TCH057"),
-     * pas l'ID numérique — donc on filtre avec le codeCours du Cours.
+     * Charge uniquement les quiz des cours auxquels l'utilisateur est inscrit.
+     * Quiz.courseId est l'ID numérique du cours, qui correspond à User.enrolledCourseIds.
      */
-    public void chargerQuizzesParCodeCours(String codeCours) {
+    public void chargerQuizzesInscrits(List<String> enrolledCourseIds) {
         executorService.execute(() -> {
             try {
                 List<Quiz> all = QuizDao.getQuizzes();
                 List<Quiz> filtered = new ArrayList<>();
-                if (all != null && codeCours != null) {
+                if (all != null && enrolledCourseIds != null) {
                     for (Quiz q : all) {
-                        if (codeCours.equals(q.getIdCours())) {
+                        if (q.getCourseId() != null && enrolledCourseIds.contains(q.getCourseId())) {
+                            filtered.add(q);
+                        }
+                    }
+                }
+                quizzes.postValue(filtered);
+            } catch (IOException | JSONException e) {
+                error.postValue("Erreur lors du chargement des quiz : " + e.getMessage());
+                quizzes.postValue(new ArrayList<>());
+            }
+        });
+    }
+
+    /**
+     * Charge les quiz appartenant à un cours donné (par ID numérique).
+     * Utilisé sur l'écran de détails d'un cours.
+     */
+    public void chargerQuizzesParCours(String courseId) {
+        executorService.execute(() -> {
+            try {
+                List<Quiz> all = QuizDao.getQuizzes();
+                List<Quiz> filtered = new ArrayList<>();
+                if (all != null && courseId != null) {
+                    for (Quiz q : all) {
+                        if (courseId.equals(q.getCourseId())) {
                             filtered.add(q);
                         }
                     }
