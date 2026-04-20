@@ -54,7 +54,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
                 String imageUrl = user.getPhotoUrl();
 
-                if (imageUrl != null && !imageUrl.isEmpty() && imageUrl.startsWith("http")) {
+                if (imageUrl != null && imageUrl.startsWith("http")) {
                     new Thread(() -> {
                         try {
                             java.net.URL url = new java.net.URL(imageUrl);

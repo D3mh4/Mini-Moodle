@@ -18,7 +18,6 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelAssignm
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelCours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelQuiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao.QuizDao;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Assignment;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
@@ -31,8 +30,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DashboardFragment extends Fragment {
     private ViewModelUser viewModelUser;
