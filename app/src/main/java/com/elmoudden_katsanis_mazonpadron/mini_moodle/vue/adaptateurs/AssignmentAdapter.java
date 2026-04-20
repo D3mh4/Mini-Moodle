@@ -49,7 +49,6 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         String statut = assignment.getStatus();
         holder.tvStatut.setText(statut != null ? statut : "---");
 
-        // Affichage de la note si disponible et si le travail est corrigé
         if (statut != null && statut.equalsIgnoreCase("corrigé") && assignment.getGrade() != null) {
             String noteStr = assignment.getGrade() + " / " + assignment.getTotalPoints();
             holder.tvNoteDevoir.setText(noteStr);

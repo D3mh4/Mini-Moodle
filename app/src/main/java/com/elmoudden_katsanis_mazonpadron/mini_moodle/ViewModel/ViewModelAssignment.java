@@ -101,8 +101,6 @@ public class ViewModelAssignment extends ViewModel {
                 if (assignments != null) {
                     List<String> enrolled = currentUser != null ? currentUser.getEnrolledCourseIds() : null;
                     for (Assignment a : assignments) {
-                        // Si pas d'utilisateur ou pas de liste inscrite, on affiche tout (sécurité)
-                        // Sinon on filtre par courseId
                         if (enrolled == null || enrolled.contains(a.getCourseId())) {
                             filtered.add(a);
                         }
@@ -146,10 +144,7 @@ public class ViewModelAssignment extends ViewModel {
 
         executorService.execute(() -> {
             try {
-                // Rafraîchir d'abord depuis le serveur
                 rafraichirUserEtRecupererCompleted();
-
-                // Ajout à completedAssignmentIds
                 List<String> completedIds = currentUser.getCompletedAssignmentIds();
                 if (completedIds == null) completedIds = new ArrayList<>();
                 completedIds = new ArrayList<>(completedIds);
@@ -157,8 +152,6 @@ public class ViewModelAssignment extends ViewModel {
                     completedIds.add(assignment.getId());
                 }
                 currentUser.setCompletedAssignmentIds(completedIds);
-
-                // Ajout de l'annonce en tête (top / newest first)
                 List<Annonce> annonces = currentUser.getUserAnnonces();
                 if (annonces == null) annonces = new ArrayList<>();
                 annonces = new ArrayList<>(annonces);

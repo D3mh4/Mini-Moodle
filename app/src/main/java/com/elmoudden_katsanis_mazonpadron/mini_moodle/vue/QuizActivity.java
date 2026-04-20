@@ -152,11 +152,6 @@ public class QuizActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
-    /**
-     * Sauvegarde synchrone du résultat ET de l'annonce personnelle.
-     * Bloque jusqu'à ce que les PATCH soient terminés.
-     */
     private void sauvegarderResultatEtAnnonceSync() {
         final int finalScore = score;
         final int finalTotal = questions.size();
