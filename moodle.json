@@ -1,37 +1,21 @@
 {
   "users": [
     {
-      "id": "1",
-      "username": "Sara",
-      "email": "sara@etsmtl.ca",
-      "password": "111",
-      "nom": "Ouni",
-      "prenom": "Sara",
-      "telephone": "514-123-4567",
-      "photoUrl": "https://example.com/photo1.jpg",
-      "enrolledCourseIds": [
-        "1"
-      ],
-      "quizResults": [
-        {
-          "quizId": "1",
-          "score": 1,
-          "total": 1
-        },
-        {
-          "quizId": "2",
-          "score": 1,
-          "total": 1
-        }
-      ],
-      "completedAssignmentIds": [],
-      "userAnnonces": [
-        {
-          "courseId": "1",
-          "text": "Quiz Quiz 2 complété"
-        }
-      ]
-    },
+  "id": "1",
+  "username": "Sara",
+  "email": "sara@etsmtl.ca",
+  "password": "111",
+  "nom": "Ouni",
+  "prenom": "Sara",
+  "telephone": "514-123-4567",
+  "photoUrl": "https://example.com/photo1.jpg",
+  "enrolledCourseIds": [
+    "1"
+  ],
+  "quizResults": [],
+  "completedAssignmentIds": [],
+  "userAnnonces": []
+},
     {
       "id": "2",
       "username": "Mylene",
@@ -72,9 +56,14 @@
       ],
       "completedAssignmentIds": [
         "12",
-        "8"
+        "8",
+        "4"
       ],
       "userAnnonces": [
+        {
+          "courseId": "2",
+          "text": "Devoir 2 soumis"
+        },
         {
           "courseId": "4",
           "text": "Quiz 1 complété"

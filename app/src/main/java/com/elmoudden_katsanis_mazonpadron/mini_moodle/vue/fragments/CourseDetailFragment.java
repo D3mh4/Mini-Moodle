@@ -154,6 +154,7 @@ public class CourseDetailFragment extends Fragment {
         tvCodeCours.setText(cours.getCode());
         tvTitreCours.setText(cours.getTitle());
         tvEnseignant.setText("Enseignant : " + cours.getTeacher());
+        tvSession.setText("Session : " + (cours.getSession() != null ? cours.getSession() : "---"));
         tvDescription.setText(cours.getDescription() != null ? cours.getDescription() : "Aucune description disponible.");
         afficherAnnonces(cours, viewModelUser.getUser().getValue());
     }
