@@ -26,14 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoursesFragment extends Fragment {
-
     private ViewModelUser viewModelUser;
     private ViewModelCours viewModelCours;
     private CoursAdapter adapter;
     private RecyclerView rvCours;
     private EditText etRecherche;
     private TextView tvAucunCours;
-
     private List<Cours> tousLesCours = new ArrayList<>();
 
     @Override
@@ -44,14 +42,11 @@ public class CoursesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
         viewModelCours = new ViewModelProvider(requireActivity()).get(ViewModelCours.class);
-
         rvCours = view.findViewById(R.id.rvListeCours);
         etRecherche = view.findViewById(R.id.etRechercheCours);
         tvAucunCours = view.findViewById(R.id.tvAucunCours);
-
         rvCours.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new CoursAdapter(cours -> {
@@ -97,21 +92,16 @@ public class CoursesFragment extends Fragment {
             rvCours.setVisibility(tousLesCours.isEmpty() ? View.GONE : View.VISIBLE);
             return;
         }
-
         List<Cours> filtered = new ArrayList<>();
         String lowerQuery = query.toLowerCase();
 
         for (Cours c : tousLesCours) {
-            boolean matchCode = c.getCode() != null
-                    && c.getCode().toLowerCase().contains(lowerQuery);
-            boolean matchTitre = c.getTitle() != null
-                    && c.getTitle().toLowerCase().contains(lowerQuery);
-
+            boolean matchCode = c.getCode() != null && c.getCode().toLowerCase().contains(lowerQuery);
+            boolean matchTitre = c.getTitle() != null && c.getTitle().toLowerCase().contains(lowerQuery);
             if (matchCode || matchTitre) {
                 filtered.add(c);
             }
         }
-
         adapter.setCoursList(filtered);
         tvAucunCours.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
         rvCours.setVisibility(filtered.isEmpty() ? View.GONE : View.VISIBLE);

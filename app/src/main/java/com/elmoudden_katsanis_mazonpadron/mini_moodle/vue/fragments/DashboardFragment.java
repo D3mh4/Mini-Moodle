@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelAssignment;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelCours;
+import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelQuiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.dao.QuizDao;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Assignment;
-import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Cours;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Quiz;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.ResultatQuiz;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,19 +35,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DashboardFragment extends Fragment {
-
     private ViewModelUser viewModelUser;
     private ViewModelCours viewModelCours;
     private ViewModelAssignment viewModelAssignment;
-
     private CoursAdapter coursAdapter;
     private AssignmentAdapter assignmentAdapter;
     private DashboardQuizAdapter quizAdapter;
-
+    private ViewModelQuiz viewModelQuiz;
     private TextView tvCountAFaire, tvCountRemis, tvCountRetard, tvCountCorrige;
-
-    private List<Quiz> cacheTousLesQuizzes = new ArrayList<>();
-
     public DashboardFragment() {
     }
 
@@ -59,18 +54,18 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
         viewModelCours = new ViewModelProvider(requireActivity()).get(ViewModelCours.class);
+        viewModelQuiz = new ViewModelProvider(requireActivity()).get(ViewModelQuiz.class);
         viewModelAssignment = new ViewModelProvider(requireActivity()).get(ViewModelAssignment.class);
-
         tvCountAFaire = view.findViewById(R.id.tvCountAFaire);
         tvCountRemis = view.findViewById(R.id.tvCountRemis);
         tvCountRetard = view.findViewById(R.id.tvCountRetard);
         tvCountCorrige = view.findViewById(R.id.tvCountCorrige);
-
         RecyclerView rvCours = view.findViewById(R.id.rvCoursInscrits);
+
         rvCours.setLayoutManager(new LinearLayoutManager(getContext()));
+
         coursAdapter = new CoursAdapter(cours -> {
             viewModelCours.setSelectedCours(cours);
             getParentFragmentManager().beginTransaction()
@@ -102,29 +97,11 @@ public class DashboardFragment extends Fragment {
             List<String> enrolledIds = user.getEnrolledCourseIds();
             if (enrolledIds != null && !enrolledIds.isEmpty()) {
                 viewModelCours.chargerCoursInscrits(enrolledIds);
-                // ViewModelAssignment filtrera tout seul via currentUser.enrolledCourseIds
                 viewModelAssignment.setCurrentUser(user);
                 viewModelAssignment.chargerTousLesAssignments();
+                viewModelQuiz.chargerQuizzesInscrits(enrolledIds);
             }
 
-            if (cacheTousLesQuizzes.isEmpty()) {
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                executor.execute(() -> {
-                    try {
-                        List<Quiz> all = QuizDao.getQuizzes();
-                        cacheTousLesQuizzes = all != null ? all : new ArrayList<>();
-                        if (isAdded()) {
-                            requireActivity().runOnUiThread(this::rafraichirQuizzesDisponibles);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-            } else {
-                rafraichirQuizzesDisponibles();
-            }
-
-            // Mettre à jour les scores déjà complétés
             if (quizAdapter != null) {
                 quizAdapter.setUserResults(user.getQuizResults());
             }
@@ -133,20 +110,17 @@ public class DashboardFragment extends Fragment {
         viewModelCours.getEnrolledCourses().observe(getViewLifecycleOwner(), courses -> {
             if (courses != null) {
                 coursAdapter.setCoursList(courses);
-                // Alimenter le lookup courseId → code pour l'adaptateur quiz
                 if (quizAdapter != null) {
                     quizAdapter.setCoursesForCodeLookup(courses);
                 }
-                // Ré-appliquer le filtre quiz maintenant qu'on a les cours
-                rafraichirQuizzesDisponibles();
             }
         });
 
         viewModelAssignment.getAssignmentList().observe(getViewLifecycleOwner(), assignments -> {
             if (assignments != null) {
                 mettreAJourCompteurs(assignments);
-
                 List<Assignment> upcoming = new ArrayList<>();
+
                 for (Assignment a : assignments) {
                     if (a.getStatus() != null
                             && (a.getStatus().equalsIgnoreCase("à faire")
@@ -154,12 +128,12 @@ public class DashboardFragment extends Fragment {
                         upcoming.add(a);
                     }
                 }
-                android.util.Log.d("DASH", "assignments received: " + assignments.size() + ", upcoming after filter: " + upcoming.size());
-                for (Assignment a : upcoming) {
-                    android.util.Log.d("DASH", "  upcoming: " + a.getTitle() + " [" + a.getStatus() + "]");
-                }
+
                 assignmentAdapter.setAssignmentList(upcoming);
                 View rv = getView() != null ? getView().findViewById(R.id.rvTravauxProchains) : null;
+
+                //J'avais un problème avec l'affichage des cours sur le dashboard et ceci est le seul moyen que j'ai trouvé pour le résoudre
+                //mais je sais que ce n'est pas une bonne pratique.
                 if (rv != null) {
                     float density = getResources().getDisplayMetrics().density;
                     int heightPx = (int) (100 * density * upcoming.size());
@@ -169,43 +143,39 @@ public class DashboardFragment extends Fragment {
                 }
             }
         });
+
+        viewModelQuiz.getQuizzes().observe(getViewLifecycleOwner(), quizzes -> {
+            if (quizzes != null) {
+                rafraichirQuizzesDisponibles(quizzes);
+            }
+        });
     }
 
     private void naviguerVersOngletQuiz() {
-        if (getActivity() == null) return;
+        if (getActivity() == null){
+            return;
+        }
         BottomNavigationView nav = requireActivity().findViewById(R.id.bottomNavigationView);
         if (nav != null) {
             nav.setSelectedItemId(R.id.quiz);
         }
     }
 
-    /**
-     * Retire de la liste :
-     *  - les quiz des cours non inscrits
-     *  - les quiz déjà complétés par l'utilisateur
-     */
-    private void rafraichirQuizzesDisponibles() {
+    private void rafraichirQuizzesDisponibles(List<Quiz> allQuizzes) {
         if (quizAdapter == null) return;
 
         Set<String> doneIds = new HashSet<>();
-        List<String> enrolledIds = null;
-
-        if (viewModelUser.getUser().getValue() != null) {
-            if (viewModelUser.getUser().getValue().getQuizResults() != null) {
-                for (ResultatQuiz r : viewModelUser.getUser().getValue().getQuizResults()) {
-                    if (r.getQuizId() != null) {
-                        doneIds.add(r.getQuizId());
-                    }
-                }
+        if (viewModelUser.getUser().getValue() != null
+                && viewModelUser.getUser().getValue().getQuizResults() != null) {
+            for (ResultatQuiz r : viewModelUser.getUser().getValue().getQuizResults()) {
+                if (r.getQuizId() != null) doneIds.add(r.getQuizId());
             }
-            enrolledIds = viewModelUser.getUser().getValue().getEnrolledCourseIds();
         }
 
         List<Quiz> disponibles = new ArrayList<>();
-        for (Quiz q : cacheTousLesQuizzes) {
+        for (Quiz q : allQuizzes) {
             if (q.getId() == null) continue;
             if (doneIds.contains(q.getId())) continue;
-            if (enrolledIds != null && !enrolledIds.contains(q.getCourseId())) continue;
             disponibles.add(q);
         }
 
@@ -213,13 +183,15 @@ public class DashboardFragment extends Fragment {
     }
 
     private void mettreAJourCompteurs(List<Assignment> assignments) {
-        int aFaire = 0, remis = 0, retard = 0, corrige = 0;
+        int aFaire = 0;
+        int remis = 0;
+        int retard = 0;
+        int corrige = 0;
 
         for (Assignment a : assignments) {
             String statut = a.getStatus();
             if (statut != null) {
                 switch (statut.toLowerCase()) {
-                    case "à faire":
                     case "non soumis":
                         aFaire++;
                         break;
@@ -235,7 +207,6 @@ public class DashboardFragment extends Fragment {
                 }
             }
         }
-
         if (tvCountAFaire != null) tvCountAFaire.setText(String.valueOf(aFaire));
         if (tvCountRemis != null) tvCountRemis.setText(String.valueOf(remis));
         if (tvCountRetard != null) tvCountRetard.setText(String.valueOf(retard));

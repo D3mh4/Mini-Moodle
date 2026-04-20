@@ -75,7 +75,6 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
 
-            // Déterminer l'index de la réponse sélectionnée (0, 1 ou 2)
             int selectedIndex = -1;
             if (selectedId == R.id.rb1) selectedIndex = 0;
             else if (selectedId == R.id.rb2) selectedIndex = 1;
@@ -107,7 +106,6 @@ public class QuizActivity extends AppCompatActivity {
         RadioButton rb2 = findViewById(R.id.rb2);
         RadioButton rb3 = findViewById(R.id.rb3);
 
-        // Affiche seulement le nombre de boutons nécessaires selon les options disponibles
         if (options != null && options.length >= 1) {
             rb1.setText(options[0]);
             rb1.setVisibility(View.VISIBLE);
@@ -167,7 +165,6 @@ public class QuizActivity extends AppCompatActivity {
         final String courseId = quiz.getCourseId();
 
         try {
-            // Récupérer l'utilisateur frais pour ne pas écraser les listes
             List<User> users = UserDao.getUsers();
             List<ResultatQuiz> results = new ArrayList<>();
             List<Annonce> annonces = new ArrayList<>();
@@ -186,22 +183,20 @@ public class QuizActivity extends AppCompatActivity {
                 }
             }
 
-            // Enlever l'ancien résultat pour ce quiz (si déjà présent)
             results.removeIf(r -> finalQuizId.equals(r.getQuizId()));
-
             ResultatQuiz nouveau = new ResultatQuiz();
             nouveau.setQuizId(finalQuizId);
             nouveau.setScore(finalScore);
             nouveau.setTotal(finalTotal);
             results.add(nouveau);
 
-            // Ajout de l'annonce en tête
             String text = (quizTitle != null ? quizTitle : "") + " complété";
             annonces.add(0, new Annonce(courseId, text));
 
             UserDao.updateQuizResults(userId, results);
             UserDao.updateUserAnnonces(userId, annonces);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -114,11 +114,6 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    /**
-     * Affiche un popup avec toutes les notifications de l'utilisateur :
-     *  1. Ses annonces personnelles (travaux soumis, quiz complétés) en premier
-     *  2. Les annonces globales de chacun de ses cours inscrits
-     */
     private void afficherNotifications() {
         List<Cours> courses = viewModelCours.getEnrolledCourses().getValue();
         User user = viewModel.getUser().getValue();
@@ -128,7 +123,6 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
             return;
         }
 
-        // Lookup courseId → code pour préfixer chaque annonce
         Map<String, String> courseIdToCode = new HashMap<>();
         for (Cours c : courses) {
             if (c.getId() != null) {
@@ -138,7 +132,6 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
 
         List<String> toutesLesAnnonces = new ArrayList<>();
 
-        // Annonces personnelles en tête (plus récentes)
         if (user != null && user.getUserAnnonces() != null) {
             for (Annonce a : user.getUserAnnonces()) {
                 if (a != null && a.getText() != null) {
@@ -149,7 +142,6 @@ public class NavActivity extends AppCompatActivity implements View.OnClickListen
             }
         }
 
-        // Annonces globales ensuite
         for (Cours cours : courses) {
             List<String> annonces = cours.getAnnonces();
             if (annonces != null) {

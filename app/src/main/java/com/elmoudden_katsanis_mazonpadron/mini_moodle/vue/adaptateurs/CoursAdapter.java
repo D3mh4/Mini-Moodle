@@ -45,21 +45,8 @@ public class CoursAdapter extends RecyclerView.Adapter<CoursAdapter.CoursViewHol
         Cours cours = coursList.get(position);
 
         holder.tvTitreCours.setText(cours.getTitle());
+        holder.tvSession.setText(cours.getSession() != null ? cours.getSession() : "");
 
-        // Formate la session : "Hiver 2026" -> "H26"
-        String rawSession = cours.getSession();
-        if (rawSession != null && !rawSession.isEmpty()) {
-            String firstLetter = rawSession.substring(0, 1).toUpperCase();
-            String lastTwo = "";
-            if (rawSession.length() >= 2) {
-                lastTwo = rawSession.substring(rawSession.length() - 2);
-            }
-            holder.tvSession.setText(firstLetter + lastTwo);
-        } else {
-            holder.tvSession.setText("");
-        }
-
-        // Enseignant + code
         String details = (cours.getTeacher() != null ? cours.getTeacher() : "Enseignant inconnu")
                 + (cours.getCode() != null ? " - " + cours.getCode() : "");
         holder.tvEnseignantEtCode.setText(details);

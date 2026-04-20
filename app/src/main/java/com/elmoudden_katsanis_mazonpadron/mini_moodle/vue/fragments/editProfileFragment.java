@@ -78,8 +78,6 @@ public class editProfileFragment extends Fragment implements View.OnClickListene
         if (v == btnSave) {
             User currentUser = viewModel.getUser().getValue();
             if (currentUser != null) {
-                // On met à jour l'objet utilisateur existant pour conserver 
-                // les listes de cours et de travaux (enrolledCourseIds, etc.)
                 currentUser.setNom(nom.getText().toString());
                 currentUser.setPrenom(prenom.getText().toString());
                 currentUser.setUsername(username.getText().toString());

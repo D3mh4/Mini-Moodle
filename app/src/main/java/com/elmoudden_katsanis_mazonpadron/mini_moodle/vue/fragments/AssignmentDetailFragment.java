@@ -21,15 +21,11 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.modeles.entite.Assignment;
 import com.google.android.material.card.MaterialCardView;
 
 public class AssignmentDetailFragment extends Fragment {
-
     private ViewModelAssignment viewModelAssignment;
-
     private TextView tvTitre, tvStatut, tvDateLimite, tvPoints;
     private TextView tvDescription, tvInstructions;
-
     private MaterialCardView cardNote;
     private TextView tvNote, tvCommentaire;
-
     private MaterialCardView cardSoumission;
     private EditText etSoumissionUrl;
     private Button btnMarquerRemis;
@@ -92,7 +88,6 @@ public class AssignmentDetailFragment extends Fragment {
         if (statut != null) {
             int color;
             switch (statut.toLowerCase()) {
-                case "à faire":
                 case "non soumis":
                     color = getResources().getColor(R.color.orange);
                     break;
@@ -113,29 +108,27 @@ public class AssignmentDetailFragment extends Fragment {
         }
 
         tvPoints.setText("Points : " + assignment.getTotalPoints());
-
         tvDescription.setText(assignment.getDescription() != null ? assignment.getDescription() : "Aucune description.");
         tvInstructions.setText(assignment.getInstructions() != null ? assignment.getInstructions() : "Aucune consigne.");
 
         if (statut != null && statut.equalsIgnoreCase("corrigé")) {
             cardNote.setVisibility(View.VISIBLE);
-
             Integer grade = assignment.getGrade();
             if (grade != null) {
                 tvNote.setText("Note : " + grade + " / " + assignment.getTotalPoints());
-            } else {
+            }
+            else {
                 tvNote.setText("Note : En attente");
             }
-
             tvCommentaire.setText(assignment.getComment() != null ? assignment.getComment() : "Aucun commentaire.");
-        } else {
+        }
+        else {
             cardNote.setVisibility(View.GONE);
         }
-
-        // Soumission visible si le travail est encore à faire/non soumis
-        if (statut != null && (statut.equalsIgnoreCase("à faire") || statut.equalsIgnoreCase("non soumis"))) {
+        if (statut != null && statut.equalsIgnoreCase("non soumis")) {
             cardSoumission.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else {
             cardSoumission.setVisibility(View.GONE);
         }
     }

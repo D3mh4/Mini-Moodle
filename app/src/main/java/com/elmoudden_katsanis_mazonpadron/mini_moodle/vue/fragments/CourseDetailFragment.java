@@ -34,30 +34,21 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CourseDetailFragment extends Fragment {
-
     private ViewModelCours viewModelCours;
     private ViewModelAssignment viewModelAssignment;
     private ViewModelQuiz viewModelQuiz;
     private ViewModelUser viewModelUser;
     private AssignmentAdapter assignmentAdapter;
     private DashboardQuizAdapter quizAdapter;
-
     private TextView tvCodeCours, tvTitreCours, tvEnseignant, tvSession;
     private TextView tvDescription;
-
     private LinearLayout llAnnonces;
     private TextView tvAucuneAnnonce;
-
     private RecyclerView rvTravaux;
     private TextView tvAucunTravail;
-
     private RecyclerView rvQuiz;
     private TextView tvAucunQuiz;
-
     private ActivityResultLauncher<Intent> quizLauncher;
-
-    // Cours actuellement affiché (pour pouvoir recombiner annonces
-    // quand l'utilisateur se met à jour)
     private Cours coursCourant;
 
     @Override
@@ -99,7 +90,6 @@ public class CourseDetailFragment extends Fragment {
             getParentFragmentManager().popBackStack();
         });
 
-        // Travaux
         rvTravaux.setLayoutManager(new LinearLayoutManager(getContext()));
         assignmentAdapter = new AssignmentAdapter(assignment -> {
             viewModelAssignment.setSelectedAssignment(assignment);
@@ -110,7 +100,6 @@ public class CourseDetailFragment extends Fragment {
         });
         rvTravaux.setAdapter(assignmentAdapter);
 
-        // Quiz
         rvQuiz.setLayoutManager(new LinearLayoutManager(getContext()));
         quizAdapter = new DashboardQuizAdapter(quiz -> {
             Intent intent = new Intent(requireContext(), QuizActivity.class);
@@ -127,7 +116,6 @@ public class CourseDetailFragment extends Fragment {
                 coursCourant = cours;
                 afficherDetailsCours(cours);
                 viewModelAssignment.chargerAssignmentsParCours(cours.getId());
-                // Quiz filtré par ID numérique du cours
                 viewModelQuiz.chargerQuizzesParCours(cours.getId());
             }
         });
@@ -141,7 +129,6 @@ public class CourseDetailFragment extends Fragment {
 
         viewModelQuiz.getQuizzesByCourse().observe(getViewLifecycleOwner(), quizzes -> {
             if (quizzes != null) {
-                // Pour afficher le code cours dans les items de quiz
                 if (coursCourant != null) {
                     quizAdapter.setCoursesForCodeLookup(Arrays.asList(coursCourant));
                 }
@@ -156,7 +143,6 @@ public class CourseDetailFragment extends Fragment {
                 if (quizAdapter != null) {
                     quizAdapter.setUserResults(user.getQuizResults());
                 }
-                // Re-rendre les annonces avec les annonces personnelles à jour
                 if (coursCourant != null) {
                     afficherAnnonces(coursCourant, user);
                 }
@@ -167,35 +153,15 @@ public class CourseDetailFragment extends Fragment {
     private void afficherDetailsCours(Cours cours) {
         tvCodeCours.setText(cours.getCode());
         tvTitreCours.setText(cours.getTitle());
-        tvEnseignant.setText("Enseignant : " + (cours.getTeacher() != null ? cours.getTeacher() : "---"));
-
-        String rawSession = cours.getSession();
-        if (rawSession != null && !rawSession.isEmpty()) {
-            String formatted = rawSession.substring(0, 1).toUpperCase();
-            if (rawSession.length() >= 2) {
-                formatted += rawSession.substring(rawSession.length() - 2);
-            }
-            tvSession.setText("Session : " + formatted);
-        } else {
-            tvSession.setText("Session : ---");
-        }
-
+        tvEnseignant.setText("Enseignant : " + cours.getTeacher());
         tvDescription.setText(cours.getDescription() != null ? cours.getDescription() : "Aucune description disponible.");
-
         afficherAnnonces(cours, viewModelUser.getUser().getValue());
     }
 
-    /**
-     * Affiche la liste fusionnée des annonces du cours :
-     *  1. Annonces personnelles de l'utilisateur pour ce cours (en premier, plus récentes)
-     *  2. Annonces globales du cours
-     */
     private void afficherAnnonces(Cours cours, User user) {
         llAnnonces.removeAllViews();
-
         List<String> affichees = new ArrayList<>();
 
-        // Annonces personnelles d'abord (filtrées par courseId)
         if (user != null && user.getUserAnnonces() != null) {
             for (Annonce a : user.getUserAnnonces()) {
                 if (a != null && cours.getId() != null && cours.getId().equals(a.getCourseId())) {
@@ -203,15 +169,14 @@ public class CourseDetailFragment extends Fragment {
                 }
             }
         }
-
-        // Puis annonces globales
         if (cours.getAnnonces() != null) {
             affichees.addAll(cours.getAnnonces());
         }
 
         if (affichees.isEmpty()) {
             tvAucuneAnnonce.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else {
             tvAucuneAnnonce.setVisibility(View.GONE);
             for (String annonce : affichees) {
                 TextView tvAnnonce = new TextView(getContext());

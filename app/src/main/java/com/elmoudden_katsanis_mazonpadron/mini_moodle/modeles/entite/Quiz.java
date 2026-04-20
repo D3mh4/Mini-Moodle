@@ -27,10 +27,6 @@ public class Quiz implements Serializable {
 
     public List<Question> getQuestions() { return questions; }
     public void setQuestions(List<Question> questions) { this.questions = questions; }
-
-    /**
-     * Retourne le nombre de questions (dérivé, pas stocké).
-     */
     public int getNbrQuestions() {
         return questions != null ? questions.size() : 0;
     }

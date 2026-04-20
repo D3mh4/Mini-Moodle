@@ -15,7 +15,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ViewModelUser extends ViewModel {
-    ///commentaire
     private final MutableLiveData<User> user = new MutableLiveData<>();
     private final MutableLiveData<String> message = new MutableLiveData<>();
     private final MutableLiveData<Boolean> saveSuccess = new MutableLiveData<>();
@@ -90,12 +89,6 @@ public class ViewModelUser extends ViewModel {
             }
         });
     }
-
-    /**
-     * Recharge l'utilisateur courant depuis le serveur.
-     * Utilisé après une modification distante (ex: après la sauvegarde
-     * d'un résultat de quiz) pour rafraîchir quizResults et autres champs.
-     */
     public void rechargerUserActuel() {
         User current = user.getValue();
         if (current == null || current.getId() == null) return;

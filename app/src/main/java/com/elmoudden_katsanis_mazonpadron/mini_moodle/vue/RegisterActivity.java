@@ -80,7 +80,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             newUser.setTelephone("");
             newUser.setPhotoUrl("");
 
-            // Auto-inscription à tous les cours disponibles (1 à 6)
             newUser.setEnrolledCourseIds(Arrays.asList("1", "2", "3", "4", "5", "6"));
             newUser.setUserAnnonces(new ArrayList<>());
 

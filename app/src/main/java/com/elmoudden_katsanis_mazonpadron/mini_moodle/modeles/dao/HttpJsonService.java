@@ -110,10 +110,6 @@ public class HttpJsonService {
         return null;
     }
 
-    /**
-     * Met à jour les informations de profil de l'utilisateur via PATCH
-     * pour ne pas écraser les listes (cours, travaux, annonces).
-     */
     public boolean enregistrerUser(User user) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -172,26 +168,6 @@ public class HttpJsonService {
         }
     }
 
-    public boolean updateAssignmentStatus(String assignmentId, String newStatus) throws IOException, JSONException {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-        JSONObject obj = new JSONObject();
-        obj.put("status", newStatus);
-
-        RequestBody corpsRequete = RequestBody.create(obj.toString(), JSON);
-        String url = URL_POINT_ENTREE + "/assignments/" + assignmentId;
-
-        Request request = new Request.Builder().url(url).patch(corpsRequete).build();
-
-        try (Response response = okHttpClient.newCall(request).execute()) {
-            if (response.code() != 200) {
-                Log.e("HttpJsonService", "Erreur PATCH assignment: " + response.code() + " " + response.message());
-            }
-            return response.code() == 200;
-        }
-    }
-
     public boolean updateCompletedAssignments(String userId, List<String> completedIds) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -236,11 +212,6 @@ public class HttpJsonService {
             return response.isSuccessful();
         }
     }
-
-    /**
-     * Met à jour uniquement la liste d'annonces personnelles d'un utilisateur.
-     * Utilise PATCH pour ne pas écraser les autres champs.
-     */
     public boolean updateUserAnnonces(String userId, List<Annonce> annonces) throws IOException, JSONException {
         OkHttpClient okHttpClient = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");

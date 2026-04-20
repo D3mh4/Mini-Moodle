@@ -32,9 +32,6 @@ public class Question implements Serializable {
     public int getCorrectOption() { return correctOption; }
     public void setCorrectOption(int correctOption) { this.correctOption = correctOption; }
 
-    /**
-     * Aide : renvoie le texte de la bonne réponse à partir de l'index.
-     */
     public String getCorrectAnswerText() {
         if (options != null && correctOption >= 0 && correctOption < options.length) {
             return options[correctOption];

@@ -18,11 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Adaptateur pour l'affichage des quiz (dashboard + détails cours).
- * Le code cours (ex: "TCH057") est résolu depuis courseIdToCode
- * car Quiz.courseId ne contient désormais qu'un ID numérique.
- */
 public class DashboardQuizAdapter extends RecyclerView.Adapter<DashboardQuizAdapter.QuizViewHolder> {
 
     private List<Quiz> quizList = new ArrayList<>();
@@ -47,11 +42,6 @@ public class DashboardQuizAdapter extends RecyclerView.Adapter<DashboardQuizAdap
         this.userResults = results != null ? results : new ArrayList<>();
         notifyDataSetChanged();
     }
-
-    /**
-     * Fournit la liste complète de cours pour pouvoir afficher le code
-     * cours (TCH...) à côté de chaque quiz.
-     */
     public void setCoursesForCodeLookup(List<Cours> courses) {
         courseIdToCode.clear();
         if (courses != null) {
@@ -68,7 +58,7 @@ public class DashboardQuizAdapter extends RecyclerView.Adapter<DashboardQuizAdap
     @Override
     public QuizViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.liste_quiz_dashboard, parent, false);
+                .inflate(R.layout.liste_quiz, parent, false);
         return new QuizViewHolder(view);
     }
 
@@ -122,9 +112,9 @@ public class DashboardQuizAdapter extends RecyclerView.Adapter<DashboardQuizAdap
         QuizViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCoursCode = itemView.findViewById(R.id.tvQuizCoursCode);
-            tvTitre = itemView.findViewById(R.id.tvQuizTitre);
-            tvInfo = itemView.findViewById(R.id.tvQuizInfo);
-            tvScore = itemView.findViewById(R.id.tvQuizScore);
+            tvTitre = itemView.findViewById(R.id.tvTitre);
+            tvInfo = itemView.findViewById(R.id.tvStatut);
+            tvScore = itemView.findViewById(R.id.tvNoteQuiz);
         }
     }
 }

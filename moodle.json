@@ -53,10 +53,48 @@
           "quizId": "12",
           "score": 0,
           "total": 1
+        },
+        {
+          "quizId": "5",
+          "score": 1,
+          "total": 1
+        },
+        {
+          "quizId": "6",
+          "score": 1,
+          "total": 1
+        },
+        {
+          "quizId": "7",
+          "score": 1,
+          "total": 1
         }
       ],
-      "completedAssignmentIds": [],
+      "completedAssignmentIds": [
+        "12",
+        "8"
+      ],
       "userAnnonces": [
+        {
+          "courseId": "4",
+          "text": "Quiz 1 complété"
+        },
+        {
+          "courseId": "3",
+          "text": "Quiz 2 complété"
+        },
+        {
+          "courseId": "3",
+          "text": "Quiz 1 complété"
+        },
+        {
+          "courseId": "3",
+          "text": "Quiz 2 complété"
+        },
+        {
+          "courseId": "6",
+          "text": "Devoir 2 soumis"
+        },
         {
           "courseId": "6",
           "text": "Quiz 2 complété"
@@ -89,7 +127,7 @@
       "title": "Architecture des ordinateurs",
       "description": "Ce cours vise à initier l'étudiante ou l'étudiant au rôle des différentes composantes matérielles d'un ordinateur.",
       "teacher": "Lazhar Khelifi",
-      "session": "Hiver 2026",
+      "session": "H26",
       "imageUrl": "https://example.com/arch.png",
       "annonces": [
         "L'examen intra aura lieu le 15 mars en salle A-1234."
@@ -101,7 +139,7 @@
       "title": "Bases de données",
       "description": "Au terme de ce cours, l'étudiante ou l'étudiant sera en mesure de décrire les principales composantes d'un SGBD.",
       "teacher": "Marie Tremblay",
-      "session": "Hiver 2026",
+      "session": "H26",
       "imageUrl": "https://example.com/db.png",
       "annonces": [
         "Le nouveau TP sur la modélisation est disponible sur Moodle."
@@ -113,7 +151,7 @@
       "title": "Applications mobiles et expérience usager",
       "description": "Développement d'applications mobiles.",
       "teacher": "Pierre Durand",
-      "session": "Hiver 2026",
+      "session": "H26",
       "imageUrl": "https://example.com/mobile.png",
       "annonces": [
         "Installation d'Android Studio requise."
@@ -125,7 +163,7 @@
       "title": "Programmation Web",
       "description": "Rudiments de la programmation Web.",
       "teacher": "Sophie Roy",
-      "session": "Hiver 2026",
+      "session": "H26",
       "imageUrl": "https://example.com/web.png",
       "annonces": [
         "Quiz HTML/CSS vendredi."
@@ -137,7 +175,7 @@
       "title": "Système d'exploitation",
       "description": "Fonctionnement système et services Internet.",
       "teacher": "Luc Lefebvre",
-      "session": "Hiver 2026",
+      "session": "H26",
       "imageUrl": "https://example.com/os.png",
       "annonces": [
         "Mise à jour des serveurs terminée."
@@ -149,7 +187,7 @@
       "title": "Automates programmables",
       "description": "Programmation GRAFCET et séquences.",
       "teacher": "Julie Gagnon",
-      "session": "Hiver 2026",
+      "session": "H26",
       "imageUrl": "https://example.com/plc.png",
       "annonces": [
         "Séance de labo mardi soir."
@@ -370,9 +408,9 @@
       "description": "Détails architecture.",
       "dueDate": "2026-03-20",
       "instructions": "PDF 5 pages",
-      "status": "Non soumis",
-      "grade": null,
-      "comment": null,
+      "status": "corrigé",
+      "grade": 18,
+      "comment": "Très bon travail!",
       "totalPoints": 20,
       "type": "text"
     },
@@ -461,9 +499,9 @@
       "description": "CSS.",
       "dueDate": "2026-05-07",
       "instructions": "Style",
-      "status": "Non soumis",
-      "grade": null,
-      "comment": null,
+      "status": "corrigé",
+      "grade": 18,
+      "comment": "Très bon travail!",
       "totalPoints": 20,
       "type": "text"
     },
@@ -487,9 +525,9 @@
       "description": "Installation.",
       "dueDate": "2026-05-09",
       "instructions": "Notes",
-      "status": "Non soumis",
-      "grade": null,
-      "comment": null,
+      "status": "corrigé",
+      "grade": 18,
+      "comment": "Très bon travail!",
       "totalPoints": 20,
       "type": "file"
     },

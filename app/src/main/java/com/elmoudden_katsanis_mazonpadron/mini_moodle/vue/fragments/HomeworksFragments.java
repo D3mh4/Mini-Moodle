@@ -22,11 +22,9 @@ import com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.adaptateurs.Assignment
 import java.util.List;
 
 public class HomeworksFragments extends Fragment {
-
     private ViewModelUser viewModelUser;
     private ViewModelAssignment viewModelAssignment;
     private AssignmentAdapter adapter;
-
     private TextView tvCountAFaire, tvCountRemis, tvCountRetard, tvCountCorrige;
     private TextView tvAucunDevoir;
     private RecyclerView rvTravaux;
@@ -42,7 +40,6 @@ public class HomeworksFragments extends Fragment {
 
         viewModelUser = new ViewModelProvider(requireActivity()).get(ViewModelUser.class);
         viewModelAssignment = new ViewModelProvider(requireActivity()).get(ViewModelAssignment.class);
-
         tvCountAFaire = view.findViewById(R.id.tvCountAFaire);
         tvCountRemis = view.findViewById(R.id.tvCountRemis);
         tvCountRetard = view.findViewById(R.id.tvCountRetard);
@@ -59,25 +56,20 @@ public class HomeworksFragments extends Fragment {
                     .commit();
         });
         rvTravaux.setAdapter(adapter);
-
-        // S'assurer que le ViewModel a bien l'utilisateur courant pour filtrer
         if (viewModelUser.getUser().getValue() != null) {
             viewModelAssignment.setCurrentUser(viewModelUser.getUser().getValue());
         }
-
         viewModelAssignment.chargerTousLesAssignments();
 
         viewModelAssignment.getAssignmentList().observe(getViewLifecycleOwner(), assignments -> {
             if (assignments != null) {
                 adapter.setAssignmentList(assignments);
                 mettreAJourCompteurs(assignments);
-
                 tvAucunDevoir.setVisibility(assignments.isEmpty() ? View.VISIBLE : View.GONE);
                 rvTravaux.setVisibility(assignments.isEmpty() ? View.GONE : View.VISIBLE);
             }
         });
 
-        // Recharger quand l'utilisateur change (ex: retour d'une soumission)
         viewModelUser.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 viewModelAssignment.setCurrentUser(user);
@@ -93,7 +85,6 @@ public class HomeworksFragments extends Fragment {
             String statut = a.getStatus();
             if (statut != null) {
                 switch (statut.toLowerCase()) {
-                    case "à faire":
                     case "non soumis":
                         aFaire++;
                         break;

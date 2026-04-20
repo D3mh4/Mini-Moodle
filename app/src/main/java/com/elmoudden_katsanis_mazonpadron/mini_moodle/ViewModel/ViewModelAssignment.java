@@ -46,11 +46,6 @@ public class ViewModelAssignment extends ViewModel {
         this.currentUser = user;
     }
 
-    /**
-     * Récupère completedAssignmentIds et userAnnonces frais depuis le serveur,
-     * pour éviter les données périmées (notamment entre plusieurs soumissions).
-     * Retourne la liste des IDs complétés.
-     */
     private List<String> rafraichirUserEtRecupererCompleted() {
         if (currentUser == null) return null;
         try {
@@ -69,12 +64,6 @@ public class ViewModelAssignment extends ViewModel {
         }
         return currentUser.getCompletedAssignmentIds();
     }
-
-    /**
-     * Applique le statut personnalisé par utilisateur.
-     * - Si l'utilisateur a soumis → "Remis"
-     * - Sinon, si la date d'échéance est passée et statut de base est "Non soumis"/"À faire" → "En retard"
-     */
     private void appliquerStatutUtilisateur(List<Assignment> assignments) {
         List<String> completedIds = rafraichirUserEtRecupererCompleted();
 
@@ -83,9 +72,13 @@ public class ViewModelAssignment extends ViewModel {
             Date today = new Date();
 
             for (Assignment a : assignments) {
+                if (a.getStatus() != null && a.getStatus().equalsIgnoreCase("corrigé")) {
+                    continue;
+                }
                 if (completedIds != null && completedIds.contains(a.getId())) {
                     a.setStatus("Remis");
-                } else if (a.getDueDate() != null && a.getStatus() != null
+                }
+                else if (a.getDueDate() != null && a.getStatus() != null
                         && (a.getStatus().equalsIgnoreCase("non soumis")
                             || a.getStatus().equalsIgnoreCase("à faire"))) {
                     Date dueDate = sdf.parse(a.getDueDate());
@@ -99,10 +92,6 @@ public class ViewModelAssignment extends ViewModel {
         }
     }
 
-    /**
-     * Charge tous les travaux, filtrés par les cours auxquels l'utilisateur
-     * est inscrit (via currentUser.enrolledCourseIds).
-     */
     public void chargerTousLesAssignments() {
         executorService.execute(() -> {
             try {
@@ -152,39 +141,6 @@ public class ViewModelAssignment extends ViewModel {
         });
     }
 
-    public void chargerTravauxProchains(List<String> enrolledCourseIds) {
-        executorService.execute(() -> {
-            try {
-                List<Assignment> allAssignments = AssignmentDao.getAssignments();
-                List<Assignment> upcoming = new ArrayList<>();
-
-                if (allAssignments != null && enrolledCourseIds != null) {
-                    appliquerStatutUtilisateur(allAssignments);
-
-                    for (Assignment a : allAssignments) {
-                        if (enrolledCourseIds.contains(a.getCourseId())
-                                && a.getStatus() != null
-                                && (a.getStatus().equalsIgnoreCase("non soumis")
-                                    || a.getStatus().equalsIgnoreCase("à faire"))) {
-                            upcoming.add(a);
-                        }
-                    }
-                }
-
-                assignmentList.postValue(upcoming);
-            } catch (IOException | JSONException e) {
-                message.postValue("Erreur lors du chargement des travaux prochains");
-                assignmentList.postValue(new ArrayList<>());
-            }
-        });
-    }
-
-    /**
-     * Soumet un travail :
-     * 1. Ajoute l'ID à completedAssignmentIds
-     * 2. Ajoute une annonce personnelle en tête de userAnnonces
-     * 3. PATCH les deux champs sur le serveur
-     */
     public void simulerSoumission(Assignment assignment) {
         if (assignment == null || assignment.getId() == null || currentUser == null) return;
 
@@ -209,9 +165,6 @@ public class ViewModelAssignment extends ViewModel {
                 String text = (assignment.getTitle() != null ? assignment.getTitle() : "") + " soumis";
                 annonces.add(0, new Annonce(assignment.getCourseId(), text));
                 currentUser.setUserAnnonces(annonces);
-
-                // Deux PATCH séparés (un par champ) pour rester compatible
-                // avec les helpers existants.
                 boolean ok1 = UserDao.updateCompletedAssignments(currentUser.getId(), completedIds);
                 boolean ok2 = UserDao.updateUserAnnonces(currentUser.getId(), annonces);
 

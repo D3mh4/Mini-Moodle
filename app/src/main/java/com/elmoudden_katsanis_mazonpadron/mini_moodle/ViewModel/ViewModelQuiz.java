@@ -34,26 +34,6 @@ public class ViewModelQuiz extends ViewModel {
         return error;
     }
 
-    /**
-     * Charge tous les quiz (non filtré par utilisateur).
-     * Peu utilisé — préférer chargerQuizzesInscrits.
-     */
-    public void chargerQuizzes() {
-        executorService.execute(() -> {
-            try {
-                List<Quiz> list = QuizDao.getQuizzes();
-                quizzes.postValue(list != null ? list : new ArrayList<>());
-            } catch (IOException | JSONException e) {
-                error.postValue("Erreur lors du chargement des quiz : " + e.getMessage());
-                quizzes.postValue(new ArrayList<>());
-            }
-        });
-    }
-
-    /**
-     * Charge uniquement les quiz des cours auxquels l'utilisateur est inscrit.
-     * Quiz.courseId est l'ID numérique du cours, qui correspond à User.enrolledCourseIds.
-     */
     public void chargerQuizzesInscrits(List<String> enrolledCourseIds) {
         executorService.execute(() -> {
             try {
@@ -74,10 +54,6 @@ public class ViewModelQuiz extends ViewModel {
         });
     }
 
-    /**
-     * Charge les quiz appartenant à un cours donné (par ID numérique).
-     * Utilisé sur l'écran de détails d'un cours.
-     */
     public void chargerQuizzesParCours(String courseId) {
         executorService.execute(() -> {
             try {

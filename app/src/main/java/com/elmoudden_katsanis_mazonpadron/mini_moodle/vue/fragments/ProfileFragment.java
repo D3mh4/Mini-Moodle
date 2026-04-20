@@ -1,12 +1,10 @@
 package com.elmoudden_katsanis_mazonpadron.mini_moodle.vue.fragments;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,8 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.R;
 import com.elmoudden_katsanis_mazonpadron.mini_moodle.ViewModel.ViewModelUser;
-
-import java.net.URI;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 

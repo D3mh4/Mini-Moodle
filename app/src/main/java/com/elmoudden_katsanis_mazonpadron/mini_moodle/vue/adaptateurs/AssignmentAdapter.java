@@ -37,18 +37,12 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     public AssignmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.liste_devoirs, parent, false);
-        android.util.Log.d("ADAPT", "inflated height param = " + view.getLayoutParams().height);
-        ViewGroup.LayoutParams lp = view.getLayoutParams();
-        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        view.setLayoutParams(lp);
         return new AssignmentViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
         Assignment assignment = assignmentList.get(position);
-        android.util.Log.d("ADAPT", "bind pos=" + position + " title=" + assignment.getTitle() + " h=" + holder.itemView.getLayoutParams().height);
-
         holder.tvTitreDevoir.setText(assignment.getTitle());
         holder.tvDateLimite.setText("Expire le: " + assignment.getDueDate());
 
@@ -69,17 +63,10 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
                 listener.onAssignmentClick(assignment);
             }
         });
-        holder.itemView.post(() -> {
-            android.util.Log.d("ADAPT", "post-layout pos=" + position
-                    + " measured=" + holder.itemView.getMeasuredHeight()
-                    + " actual=" + holder.itemView.getHeight()
-                    + " parentH=" + ((View)holder.itemView.getParent()).getHeight());
-        });
     }
 
     @Override
     public int getItemCount() {
-        android.util.Log.d("ADAPT", "getItemCount returning " + assignmentList.size());
         return assignmentList.size();
     }
 
