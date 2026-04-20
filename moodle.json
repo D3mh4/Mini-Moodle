@@ -1,21 +1,21 @@
 {
   "users": [
     {
-  "id": "1",
-  "username": "Sara",
-  "email": "sara@etsmtl.ca",
-  "password": "111",
-  "nom": "Ouni",
-  "prenom": "Sara",
-  "telephone": "514-123-4567",
-  "photoUrl": "https://example.com/photo1.jpg",
-  "enrolledCourseIds": [
-    "1"
-  ],
-  "quizResults": [],
-  "completedAssignmentIds": [],
-  "userAnnonces": []
-},
+      "id": "1",
+      "username": "Sara",
+      "email": "sara@etsmtl.ca",
+      "password": "111",
+      "nom": "Ouni",
+      "prenom": "Sara",
+      "telephone": "514-123-4567",
+      "photoUrl": "https://example.com/photo1.jpg",
+      "enrolledCourseIds": [
+        "1"
+      ],
+      "quizResults": [],
+      "completedAssignmentIds": [],
+      "userAnnonces": []
+    },
     {
       "id": "2",
       "username": "Mylene",
@@ -107,6 +107,62 @@
       "quizResults": [],
       "completedAssignmentIds": [],
       "userAnnonces": []
+    },
+    {
+      "id": "mXs3czoOy5I",
+      "username": "",
+      "email": "liam@ens.etsmtl.ca",
+      "password": "pass123",
+      "nom": "ets",
+      "prenom": "liam",
+      "telephone": "",
+      "photoUrl": "image.jpg",
+      "enrolledCourseIds": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "quizResults": [
+        {
+          "quizId": "2",
+          "score": 1,
+          "total": 1
+        },
+        {
+          "quizId": "5",
+          "score": 1,
+          "total": 1
+        },
+        {
+          "quizId": "10",
+          "score": 1,
+          "total": 1
+        }
+      ],
+      "completedAssignmentIds": [
+        "2"
+      ],
+      "userAnnonces": [
+        {
+          "courseId": "5",
+          "text": "Quiz 2 complété"
+        },
+        {
+          "courseId": "3",
+          "text": "Quiz 1 complété"
+        },
+        {
+          "courseId": "1",
+          "text": "Quiz 2 complété"
+        },
+        {
+          "courseId": "1",
+          "text": "Devoir 2 soumis"
+        }
+      ]
     }
   ],
   "courses": [
@@ -397,9 +453,9 @@
       "description": "Détails architecture.",
       "dueDate": "2026-03-20",
       "instructions": "PDF 5 pages",
-      "status": "corrigé",
-      "grade": 18,
-      "comment": "Très bon travail!",
+      "status": "non soumis",
+      "grade": null,
+      "comment": null,
       "totalPoints": 20,
       "type": "text"
     },
@@ -410,9 +466,9 @@
       "description": "Assembleur.",
       "dueDate": "2026-05-05",
       "instructions": "Boucle",
-      "status": "Non soumis",
-      "grade": null,
-      "comment": null,
+      "status": "corrigé",
+      "grade": 15,
+      "comment": "Bon travail, mais attention aux détails.",
       "totalPoints": 20,
       "type": "file"
     },
@@ -449,7 +505,7 @@
       "description": "UI Mobile.",
       "dueDate": "2026-03-30",
       "instructions": "Activity",
-      "status": "Non soumis",
+      "status": "non soumis",
       "grade": null,
       "comment": null,
       "totalPoints": 20,
@@ -488,9 +544,9 @@
       "description": "CSS.",
       "dueDate": "2026-05-07",
       "instructions": "Style",
-      "status": "corrigé",
-      "grade": 18,
-      "comment": "Très bon travail!",
+      "status": "non soumis",
+      "grade": null,
+      "comment": null,
       "totalPoints": 20,
       "type": "text"
     },
@@ -514,9 +570,9 @@
       "description": "Installation.",
       "dueDate": "2026-05-09",
       "instructions": "Notes",
-      "status": "corrigé",
-      "grade": 18,
-      "comment": "Très bon travail!",
+      "status": "non soumis",
+      "grade": null,
+      "comment": null,
       "totalPoints": 20,
       "type": "file"
     },
